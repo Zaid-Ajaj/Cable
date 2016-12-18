@@ -1,9 +1,0 @@
-C:\Users\Zaid\Dropbox\Projects\C#\Cable\Cable.Bridge\bin\Debug\Cable.Bridge.dll
-C:\Users\Zaid\Dropbox\Projects\C#\Cable\Cable.Bridge\bin\Debug\Cable.Bridge.pdb
-C:\Users\Zaid\Dropbox\Projects\C#\Cable\Cable.Bridge\bin\Debug\Bridge.dll
-C:\Users\Zaid\Dropbox\Projects\C#\Cable\Cable.Bridge\bin\Debug\Bridge.xml
-C:\Users\Zaid\Dropbox\Projects\C#\Cable\Cable.Bridge\obj\Debug\Cable.Bridge.dll
-C:\Users\Zaid\Dropbox\Projects\C#\Cable\Cable.Bridge\obj\Debug\Cable.Bridge.pdb
-C:\Users\Zaid\Dropbox\Projects\C#\Cable\Cable.Bridge\bin\Debug\Bridge.Html5.dll
-C:\Users\Zaid\Dropbox\Projects\C#\Cable\Cable.Bridge\bin\Debug\Bridge.Html5.xml
-C:\Users\Zaid\Dropbox\Projects\C#\Cable\Cable.Bridge\obj\Debug\Cable.Bridge.csprojResolveAssemblyReference.cache

@@ -1,1 +1,0 @@
-{"IsPrimitive":true,"IsArray":true,"IsNumeric":false,"Type":"Array","Value":[{"IsPrimitive":false,"IsArray":false,"IsNumeric":false,"Type":"Client.Person","Value":{"Name":{"IsPrimitive":true,"IsArray":false,"IsNumeric":false,"Type":"String","Value":"Someone"},"Age":{"IsPrimitive":true,"IsArray":false,"IsNumeric":true,"Type":"Int32","Value":"56"}}}]}
