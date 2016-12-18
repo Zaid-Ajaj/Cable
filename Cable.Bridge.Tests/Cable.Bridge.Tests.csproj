@@ -67,7 +67,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Bridge\output\readme.txt" />
     <Content Include="Bridge\www\demo.html" />
   </ItemGroup>
   <ItemGroup>
@@ -76,7 +75,9 @@
       <Name>Cable.Bridge</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Bridge\output\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Bridge.Min.15.6.0\build\Bridge.Min.targets" Condition="Exists('..\packages\Bridge.Min.15.6.0\build\Bridge.Min.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

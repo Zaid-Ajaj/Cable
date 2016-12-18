@@ -1,0 +1,11 @@
+C:\Users\Zaid\Dropbox\Projects\C#\Cable\Cable.Nancy\bin\Debug\Cable.Nancy.dll
+C:\Users\Zaid\Dropbox\Projects\C#\Cable\Cable.Nancy\bin\Debug\Cable.Nancy.pdb
+C:\Users\Zaid\Dropbox\Projects\C#\Cable\Cable.Nancy\bin\Debug\Cable.dll
+C:\Users\Zaid\Dropbox\Projects\C#\Cable\Cable.Nancy\bin\Debug\Nancy.dll
+C:\Users\Zaid\Dropbox\Projects\C#\Cable\Cable.Nancy\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Zaid\Dropbox\Projects\C#\Cable\Cable.Nancy\bin\Debug\Cable.pdb
+C:\Users\Zaid\Dropbox\Projects\C#\Cable\Cable.Nancy\bin\Debug\Nancy.xml
+C:\Users\Zaid\Dropbox\Projects\C#\Cable\Cable.Nancy\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Zaid\Dropbox\Projects\C#\Cable\Cable.Nancy\obj\Debug\Cable.Nancy.csprojResolveAssemblyReference.cache
+C:\Users\Zaid\Dropbox\Projects\C#\Cable\Cable.Nancy\obj\Debug\Cable.Nancy.dll
+C:\Users\Zaid\Dropbox\Projects\C#\Cable\Cable.Nancy\obj\Debug\Cable.Nancy.pdb
