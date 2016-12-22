@@ -95,7 +95,7 @@ namespace Cable.Nancy.Tests
                 Float, Double, Decimal
             };
 
-            SendReq("/IService/numericPrimitives", numericValues);
+            SendReq("/IService/NumericPrimitives", numericValues);
         }
 
 

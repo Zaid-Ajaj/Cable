@@ -28,6 +28,32 @@ namespace Cable.Nancy
 
     public static class NancyServer
     {
+
+        private static bool CheckMethodOverloading<T>()
+        {
+            var type = typeof(T);
+
+            if (!type.IsInterface) throw new ArgumentException("Generic type must be an interface");
+
+            var groups = typeof(T).GetMethods().Select(method => method.Name).GroupBy(x => x).Where(grouping => grouping.Count() > 1);
+
+            if (groups.Count() == 0)
+            {
+                return false;
+            }
+            else
+            {
+                var methods = groups.Select(group => Tuple.Create(group.Key, group.Count()))
+                                    .Select(tup => $"Method {tup.Item1} has {tup.Item2} overloads");
+
+                var message = string.Join(", ", methods.ToArray());
+
+                throw new Exception($"Overloading public methods in interface not supported: {message}.");
+            }
+                
+        }
+
+
         private static string TypeName(Type type)
         {
             Func<Type, string> fullName = t => t.Name.Split('`')[0];
@@ -61,16 +87,18 @@ namespace Cable.Nancy
                 ServiceName = serviceName
             };
             
-            
-
             if (!baseType.IsInterface) throw new ArgumentException("Generic type argument TBase must be an interface");
+
+            CheckMethodOverloading<TBase>();
 
             var defaultMethods = new string[] { "Equals", "ToString", "GetHashCode", "GetType" };
 
-            foreach(var method in type.GetMethods())
-            {
-                if (defaultMethods.Contains(method.Name)) continue;
-               
+            var publicMethods = baseType.GetMethods().Where(method => !defaultMethods.Contains(method.Name));
+
+            foreach(var method in publicMethods)
+            {  
+                if (method.ContainsGenericParameters) throw new ArgumentException($"Method {method.Name} contains generic type parameters, this is not supported.");
+
                 RegisterRoute<TBase>(implementation, method, module, routeSchema);
             }
 

@@ -32,6 +32,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Nancy, Version=1.4.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Nancy.1.4.3\lib\net40\Nancy.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Nancy.Hosting.Self, Version=1.4.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Nancy.Hosting.Self.1.4.1\lib\net40\Nancy.Hosting.Self.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
@@ -46,18 +54,41 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Bootstraper.cs" />
+    <Compile Include="ClientModule.cs" />
+    <Compile Include="ComplexTypes.cs" />
+    <Compile Include="IService.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Cable.Nancy\Cable.Nancy.csproj">
+      <Project>{ecbc54cb-c8c0-47d9-8afa-e97116db06bc}</Project>
+      <Name>Cable.Nancy</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Cable\Cable.csproj">
       <Project>{2def6497-c5fd-450b-bd12-d0558515dfdc}</Project>
       <Name>Cable</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="bin\Debug\client\html\index.html" />
+    <Content Include="bin\Debug\client\js\bridge.js" />
+    <Content Include="bin\Debug\client\js\bridge.min.js" />
+    <Content Include="bin\Debug\client\js\cable.bridge.js" />
+    <Content Include="bin\Debug\client\js\cable.bridge.min.js" />
+    <Content Include="bin\Debug\client\js\cable.nancy.clientTests.js" />
+    <Content Include="bin\Debug\client\js\cable.nancy.clientTests.min.js" />
+    <Content Include="bin\Debug\client\js\client.js" />
+    <Content Include="bin\Debug\client\js\client.min.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="bin\Debug\client\css\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

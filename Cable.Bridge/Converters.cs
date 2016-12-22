@@ -6,7 +6,7 @@ namespace Cable.Bridge
 {
     public static class Converters
     {
-        public static bool IsNumeric(object value)
+        public static bool IsNumeric<T>(T value)
         {
             return value is sbyte
                 || value is byte
@@ -31,9 +31,9 @@ namespace Cable.Bridge
                 || IsNumeric(value); 
         }
 
-        public static bool IsArray(object obj)
+        public static bool IsArray<T>(T obj)
         {
-            var type = obj.GetType();
+            var type = GetTypeof(obj);
 
             return type.Name == "Array"
                 || type.FullName.EndsWith("[]")
@@ -56,7 +56,7 @@ namespace Cable.Bridge
                 var property = new Property
                 {
                     Name = keys[i],
-                    Type = input[keys[i]].GetType(),
+                    Type = GetTypeof(input[keys[i]]),
                     Value = input[keys[i]]
                 };
 
@@ -88,18 +88,18 @@ namespace Cable.Bridge
             return result;
         }
 
-        public static object EncodeNumeric(object value)
+        public static object EncodeNumeric<T>(T value)
         {
             var result = Script.Write<object>("{}");
             result["IsPrimitive"] = true;
             result["IsArray"] = false;
             result["IsNumeric"] = true;
-            result["Type"] = value.GetType().Name;
+            result["Type"] = GetTypeof(value).Name;
             result["Value"] = value.ToString();
             return result;
         }
 
-        public static object EncodeChar(object value)
+        public static object EncodeChar<T>(T value)
         {
             var result = Script.Write<object>("{}");
             result["IsPrimitive"] = true;
@@ -143,9 +143,12 @@ namespace Cable.Bridge
             return result;
         }
 
-        public static object EncodeObject<T>(T value)
+        [Template("Bridge.getType({value})")]
+        static extern Type GetTypeof(object value);
+
+        public static object EncodeObject(object value)
         {
-            var type = value.GetType();
+            var type = GetTypeof(value);
 
             if (IsPrimitive(value))
             {
@@ -257,14 +260,14 @@ namespace Cable.Bridge
                 result["IsPrimitive"] = false;
                 result["IsArray"] = false;
                 result["IsNumeric"] = false;
-                result["Type"] = value.GetType().FullName;
+                result["Type"] = GetTypeof(value).FullName;
 
                 var props = new object();
 
                 foreach(var prop in ExtactExistingProps(value))
                 {
 
-                    //@ props[prop.getName()] = Cable.Bridge.Converters.encodeObject(prop.getType(), prop.getValue());
+                    //@ props[prop.getName()] = Cable.Bridge.Converters.encodeObject(prop.getValue());
                 }
 
                 result["Value"] = props;
@@ -292,6 +295,8 @@ namespace Cable.Bridge
                 }
 
                 if (type == "String") return json["Value"];
+
+                if (type == "Char") return (char)(json["Value"].As<int>());
 
                 if (type == "TimeSpan") return TimeSpan.FromTicks(long.Parse(json["Value"].As<string>()));
 

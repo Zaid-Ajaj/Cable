@@ -72,6 +72,30 @@ namespace Cable.Bridge.Tests
 
             });
 
+            QUnit.Test("Serialization and deserialization of double[] works", assert =>
+            {
+                var doubles = new double[] { 2.5, 2.56, 2.567 };
+                var serialized = Json.Serialize(doubles);
+                var deserialized = Json.Deserialize<double[]>(serialized);
+
+                assert.Equal(doubles[0] == deserialized[0], true);
+                assert.Equal(doubles[1] == deserialized[1], true);
+                assert.Equal(doubles[2] == deserialized[2], true);
+
+            });
+
+            QUnit.Test("Serialization and deserialization of decimal[] works", assert =>
+            {
+                var decimals = new decimal[] { 2.5m, 2.56m, 2.567m };
+                var serialized = Json.Serialize(decimals);
+                var deserialized = Json.Deserialize<decimal[]>(serialized);
+
+                assert.Equal(decimals[0] == deserialized[0], true);
+                assert.Equal(decimals[1] == deserialized[1], true);
+                assert.Equal(decimals[2] == deserialized[2], true);
+
+            });
+
             QUnit.Test("Serialization and deserialization of DateTime array works", assert =>
             {
                 var dates = new DateTime[] { DateTime.Now, DateTime.UtcNow, new DateTime(2016, 12, 10, 20, 30, 0, 15) };
@@ -79,8 +103,6 @@ namespace Cable.Bridge.Tests
                 var deserialized = Json.Deserialize<DateTime[]>(serialized);
                 assert.DeepEqual(deserialized, dates);
             });
-
-
         }
     }
 }

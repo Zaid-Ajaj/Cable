@@ -96,6 +96,11 @@ namespace Cable.Bridge
             return await tcs.Task;
         }
 
+        static string Capitalized(string input)
+        {
+            return char.ToUpper(input[0]).ToString() + input.Substring(1, input.Length - 1);
+        }
+
         public static T Resolve<T>()
         {
             var serviceType = typeof(T);
@@ -116,22 +121,23 @@ namespace Cable.Bridge
             foreach (var method in methods)
             {
                 var methodName = method.Name;
+
                 if (method.ReturnType == typeof(Task))
                 {
-                    service[$"{serviceFullName}${methodName}"] = Lambda(async () =>
+                    service[$"{serviceFullName}${ToCamelCase(methodName)}"] = Lambda(async () =>
                     {
                         var parameters = Script.Write<object[]>("System.Linq.Enumerable.from(arguments).toArray()");
-                        var url = $"/{serviceName}/{methodName}";
+                        var url = $"/{serviceName}/{Capitalized(methodName)}";
                         var result = await PostJsonAsync(url, parameters);
                         return result;
                     });
                 }
                 else
                 {
-                    service[$"{serviceFullName}${methodName}"] = Lambda(() =>
+                    service[$"{serviceFullName}${ToCamelCase(methodName)}"] = Lambda(() =>
                     {
                         var parameters = Script.Write<object[]>("System.Linq.Enumerable.from(arguments).toArray()");
-                        var url = $"/{serviceName}/{methodName}";
+                        var url = $"/{serviceName}/{Capitalized(methodName)}";
                         var result = PostJsonSync(url, parameters);
                         return result;
                     });

@@ -48,17 +48,23 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Cable.Console\ComplexTypes.cs">
+      <Link>ComplexTypes.cs</Link>
+    </Compile>
+    <Compile Include="..\Cable.Console\IService.cs">
+      <Link>IService.cs</Link>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Bridge\bridge.json" />
+    <None Include="bridge.json" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Bridge\www\demo.html" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Bridge\output\" />
+    <ProjectReference Include="..\Cable.Bridge\Cable.Bridge.csproj">
+      <Project>{21a1ebdd-3c2c-491e-bc06-e6a65c2dfc4a}</Project>
+      <Name>Cable.Bridge</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Bridge.Min.15.6.0\build\Bridge.Min.targets" Condition="Exists('..\packages\Bridge.Min.15.6.0\build\Bridge.Min.targets')" />
