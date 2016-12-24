@@ -1,11 +1,5 @@
 ﻿using Cable.Tests.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Cable.Tests
 {
@@ -17,9 +11,9 @@ namespace Cable.Tests
         {
             var sample = new WithEnum { Choice = Choices.One };
 
-            var serialized = JsonConvert.SerializeObject(sample, Formatting.Indented, new CableConverter());
+            var serialized = Json.Serialize(sample);
 
-            var deserialized = JsonConvert.DeserializeObject<WithEnum>(serialized, new CableConverter());
+            var deserialized = Json.Deserialize<WithEnum>(serialized);
 
             Assert.AreEqual(sample.Choice, deserialized.Choice);
         }

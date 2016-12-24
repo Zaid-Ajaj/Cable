@@ -225,6 +225,7 @@ namespace Cable
                 clone.Add(new JProperty("IsPrimitive", false));
                 clone.Add(new JProperty("IsArray", false));
                 clone.Add(new JProperty("IsNumeric", false));
+                clone.Add(new JProperty("FromBridge", false));
                 clone.Add(new JProperty("Type", TypeName(obj.GetType())));
 
                 var value = new JObject();
@@ -240,20 +241,22 @@ namespace Cable
         }
 
 
-
+        /// <summary>
+        /// Generates a string output from a type such that eval(output) = Activator.CreateInstance(type)
+        /// </summary>
         private static string TypeName(Type type)
         {
             Func<Type, string> fullName = t => t.FullName.Split('`')[0];
 
             if (!type.IsGenericType)
             {
-                return $"{type.FullName}";
+                return $"new {type.FullName}()";
             }
             else
             {
                 var genericArgs = type.GetGenericArguments();
-                var asNames = string.Join(",", genericArgs.Select(x => $"[{TypeName(x)}]"));
-                return $"{fullName(type)}${genericArgs.Length}[{asNames}]";
+                var asNames = string.Join(",", genericArgs.Select(TypeName));
+                return $"new ({fullName(type)}${genericArgs.Length}({asNames}))()";
             }
         }
     }

@@ -50,8 +50,8 @@ namespace Cable.Nancy.ClientTests
                 assert.Equal(objectsResult[1], 5);
                 assert.Equal(objectsResult[2], 'a');
 
-                var date = objectsResult[3].As<DateTime>();
-                DatesEqual(assert, date, now);
+                var dateFromObjects = objectsResult[3].As<DateTime>();
+                DatesEqual(assert, dateFromObjects, now);
             });
 
 
@@ -164,6 +164,154 @@ namespace Cable.Nancy.ClientTests
                 assert.Equal(result.Hour == (DateTime.Now.AddHours(5).Hour), true);
             });
 
+            var resultSumOfMatrixOfInt = await Server.SumOfMatrixOfInt(new int[][] 
+            {
+                new int[] { 1, 2, 3 },
+                new int[] { 4, 5, 6 },
+                new int[] { 7, 8, 9 }
+            });
+
+            QUnit.Test("IService.SumOfMatrixOfInt()", assert =>
+            {
+                assert.Equal(resultSumOfMatrixOfInt, 45);
+            });
+
+            int[][] matrix =
+            {
+                 new int[] { 1, 2, 3 },
+                 new int[] { 4, 5, 6 },
+                 new int[] { 7, 8, 9 }
+            };
+
+            string[][] stringMatrix =
+            {
+                 new string[] { "Hello", "its" , "Me" }
+            };
+
+            var multipleMatrixElementCount = await Server.MatrixMultipleArgs(matrix, stringMatrix);
+
+            QUnit.Test("IService.MatrixMultipleArgs()",  assert =>
+            {
+                assert.Equal(multipleMatrixElementCount, 12);
+            });
+
+
+            var longMatrix = new long[][]
+            {
+                new long[] { 1L, 2L, 3L, 4L, 5L }
+            };
+
+            var longMatrixSum = await Server.SumMatrixOfLong(longMatrix);
+
+            QUnit.Test("IService.SumMatrixOfLong()", assert => assert.Equal(longMatrixSum == 15L, true));
+
+            var date = new DateTime(1996, 11, 13, 0, 0, 0, 20);
+
+            var person = new Person
+            {
+                Age = 20,
+                Name = "Zaid",
+                Money = 22.399m,
+                IsMarried = false,
+                DateOfBirth = date
+            };
+
+            QUnit.Test("IService.EchoPerson()", assert =>
+            {
+                var syncEchoedPerson = Server.EchoPerson(person);
+                assert.Equal(syncEchoedPerson.Name, "Zaid");
+                assert.Equal(syncEchoedPerson.Age, 20);
+                assert.Equal(syncEchoedPerson.Money == 22.399m, true);
+                DatesEqual(assert, date, syncEchoedPerson.DateOfBirth);
+                assert.Equal(syncEchoedPerson.IsMarried, false);
+            });
+
+            var personTask = await Server.EchoTaskPerson(person);
+
+            QUnit.Test("IService.EchoTaskPerson()", assert =>
+            {
+                assert.Equal(personTask.Name, "Zaid");
+                assert.Equal(personTask.Age, 20);
+                assert.Equal(personTask.Money == 22.399m, true);
+                DatesEqual(assert, date, personTask.DateOfBirth);
+                assert.Equal(personTask.IsMarried, false);
+            });
+
+
+            var myAge = await Server.HowOld(person);
+
+            QUnit.Test("IService.HowOld()", assert => assert.Equal(myAge, 20));
+
+            var numList = new List<int>();
+            numList.AddRange(new int[] { 1, 2, 3, 4, 5 });
+
+            var sumArray = await Server.IEnumerableSum(new int[] { 1, 2, 3, 4, 5 });
+            var sumList = await Server.IEnumerableSum(numList);
+            var sumRange = await Server.IEnumerableSum(Enumerable.Range(1, 5));
+
+            QUnit.Test("IService.IEnumerableSum()", assert =>
+            {
+                assert.Equal(sumArray, 15);
+                assert.Equal(sumList, 15);
+                assert.Equal(sumRange, 15);
+            });
+
+            var genericInt = await Server.GenericInt(new Generic<int> { Value = 5 });
+            QUnit.Test("IService.GenericInt()", assert =>
+            {
+                assert.Equal(genericInt, 5);
+            });
+
+
+            var simpleGeneric = await Server.GenericSimpleNested(new Generic<SimpleNested>
+            {
+                Value = new SimpleNested
+                {
+                    Int = 10,
+                    String = "MyStr",
+                    Long = 20L,
+                    Double = 2.5,
+                    Decimal = 3.5m
+                }
+            });
+
+            QUnit.Test("IService.GenericSimpleNested()", assert => 
+            {
+                assert.Equal(simpleGeneric.Int, 10);
+                assert.Equal(simpleGeneric.String, "MyStr");
+                assert.Equal(simpleGeneric.Long == 20L, true);
+                assert.Equal(simpleGeneric.Double, 2.5);
+                assert.Equal(simpleGeneric.Decimal == 3.5m, true);
+            });
+
+            var genericPersonArg = new Generic<Person> { Value = person };
+
+            var genericPerson = await Server.EchoGenericPerson(genericPersonArg);
+
+            QUnit.Test("IService.EchoGenericPerson()", assert =>
+            {
+                assert.Equal(genericPerson.Value.Name, "Zaid");
+                assert.Equal(genericPerson.Value.Age, 20);
+                assert.Equal(genericPerson.Value.Money == 22.399m, true);
+                DatesEqual(assert, date, genericPerson.Value.DateOfBirth);
+                assert.Equal(genericPerson.Value.IsMarried, false);
+                
+            });
+
+            var genericFstSnd = new DoubleGeneric<int, string>
+            {
+                First = 10,
+                Second = "Zaid"
+            };
+
+            var resultFirst = await Server.ReturnFirst(genericFstSnd);
+            var resultSecond = await Server.ReturnSecond(genericFstSnd);
+
+            QUnit.Test("IService.ReturnFirst() and IService.ReturnSecond()", assert =>
+            {
+                assert.Equal(resultFirst, 10);
+                assert.Equal(resultSecond, "Zaid");
+            });
 
         }
     }

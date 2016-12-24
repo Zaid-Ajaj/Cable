@@ -1,16 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Client
 {
-#if BRIDGE
-    [Bridge.Reflectable]
-#endif
-    public enum Gender { Male, Female }
-
     #if BRIDGE
     [Bridge.Reflectable]
     #endif
@@ -21,7 +13,18 @@ namespace Client
         public decimal Money { get; set; }
         public DateTime DateOfBirth { get; set; }
         public bool IsMarried { get; set; }
-        public Gender Gender { get; set; }
+    }
+
+#if BRIDGE
+    [Bridge.Reflectable]
+#endif
+    public class SimpleNested
+    {
+        public int Int { get; set; }
+        public string String { get; set; }
+        public long Long { get; set; }
+        public double Double { get; set; }
+        public decimal Decimal { get; set; }
     }
 
 #if BRIDGE
@@ -30,5 +33,15 @@ namespace Client
     public class Generic<T>
     {
         public T Value { get; set; }
+    }
+
+
+#if BRIDGE
+    [Bridge.Reflectable]
+#endif
+    public class DoubleGeneric<T, U>
+    {
+        public T First { get; set; }
+        public U Second { get; set; }
     }
 }

@@ -122,7 +122,6 @@ namespace Cable.Bridge.Tests
                 assert.Equal(generic.Inner.Nested.InnerInner, deserialized.Inner.Nested.InnerInner);
                 assert.Equal(generic.Nested.InnerInner.Inner, deserialized.Nested.InnerInner.Inner);
                 assert.Equal(generic.Nested.InnerInner.Nested.InnerInner, deserialized.Nested.InnerInner.Nested.InnerInner);
-
             }); 
         }
     }

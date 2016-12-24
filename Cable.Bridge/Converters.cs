@@ -260,6 +260,7 @@ namespace Cable.Bridge
                 result["IsPrimitive"] = false;
                 result["IsArray"] = false;
                 result["IsNumeric"] = false;
+                result["FromBridge"] = true;
                 result["Type"] = GetTypeof(value).FullName;
 
                 var props = new object();
@@ -320,6 +321,12 @@ namespace Cable.Bridge
 
                 if (type == "Boolean") return json["Value"].As<bool>();
 
+                if (type == "Enum")
+                {
+                    var enumType = Type.GetType(json["EnumType"].As<string>());
+                    var enumValue = Enum.Parse(enumType, json["Value"].As<string>());
+                }
+
                 return null;
 
             }
@@ -356,19 +363,28 @@ namespace Cable.Bridge
             }
             else
             {
-                var typeName = json["Type"].As<string>();
-                //@ console.log(typeName);
-                var instance = Activator.CreateInstance(Type.GetType(typeName));
+                object instance = null;
+
+                if (json["FromBridge"].As<bool>())
+                {
+                    var typeFullName = json["Type"].As<string>();
+                    var typeFromAssembly = Type.GetType(typeFullName);
+                    instance = Activator.CreateInstance(typeFromAssembly);
+                }
+                else
+                {
+                    var typeGenerationExpression = json["Type"].As<string>();
+                    instance = Script.Eval<object>(typeGenerationExpression);
+                }
+
+
                 var propNames = ObjectKeys(json["Value"]);
-                //@ console.log(propNames);
-                for(int i = 0; i < propNames.Length; i++)
+                for (int i = 0; i < propNames.Length; i++)
                 {
                     var propValue = json["Value"][propNames[i]];
                     var decoded = DecodeObject<object>(propValue);
                     var setPropName = "set" + propNames[i];
-                    //@ console.log(setPropName);
-                    //@ console.log(instance);
-                    //@ instance[setPropName](decoded);
+                    instance[setPropName].As<Action<object>>()(decoded);
                 }
 
                 return instance;

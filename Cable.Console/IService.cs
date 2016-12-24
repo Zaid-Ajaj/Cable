@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Client
 {
-    #if BRIDGE
+#if BRIDGE
     [Bridge.Reflectable]
-    #endif
+#endif
     public interface IService
     {
         Task<bool> String(string input);
@@ -67,6 +67,14 @@ namespace Client
         Task<int> IEnumerableSum(IEnumerable<int> xs);
 
         Task<Generic<Person>> EchoGenericPerson(Generic<Person> g);
+
+        Task<int> GenericInt(Generic<int> g);
+
+        Task<SimpleNested> GenericSimpleNested(Generic<SimpleNested> g);
+
+        Task<int> ReturnFirst(DoubleGeneric<int, string> g);
+
+        Task<string> ReturnSecond(DoubleGeneric<int, string> g);
 
         //Task<bool> ArrayOfDecimals(decimal[] decimals);
 
