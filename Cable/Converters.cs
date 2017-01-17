@@ -226,6 +226,10 @@ namespace Cable
                 clone.Add(new JProperty("IsArray", false));
                 clone.Add(new JProperty("IsNumeric", false));
                 clone.Add(new JProperty("FromBridge", false));
+                // the Type property is only meant for Bridge client apps
+                // this will be a string that when evaluated in javascript
+                // will behave the same as making a new instance of the (generic) class
+                // i.e. eval(typeName(class)) = Activator.CreateInstance(class)
                 clone.Add(new JProperty("Type", TypeName(obj.GetType())));
 
                 var value = new JObject();

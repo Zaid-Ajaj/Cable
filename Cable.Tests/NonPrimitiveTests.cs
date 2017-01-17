@@ -26,15 +26,12 @@ namespace Cable.Tests
 
             Assert.AreEqual(json["IsPrimitive"].Value<bool>(), false);
             Assert.AreEqual(json["IsNumeric"].Value<bool>(), false);
-            Assert.AreEqual(json["IsArray"].Value<bool>(), false);
-            Assert.AreEqual(json["Type"].Value<string>(), "Cable.Tests.Models.NonPrimitive");
+            Assert.AreEqual(json["IsArray"].Value<bool>(), false);            
             Assert.AreEqual(json["Value"]["Id"]["IsPrimitive"].Value<bool>(), true);
             Assert.AreEqual(json["Value"]["Id"]["IsNumeric"].Value<bool>(), true);
             Assert.AreEqual(json["Value"]["Id"]["IsArray"].Value<bool>(), false);
             Assert.AreEqual(json["Value"]["Id"]["Type"].Value<string>(), "Int32");
             Assert.AreEqual(json["Value"]["Id"]["Value"].Value<int>(), 5);
-
-
         }
 
 
