@@ -27,6 +27,12 @@ namespace Cable
             var json = JObject.Load(reader);
 
             var type = json["Type"].Value<string>();
+
+            if (type == "NullType")
+            {
+                return null;
+            }
+
             if (json["IsPrimitive"].Value<bool>())
             {
 

@@ -82,6 +82,18 @@ namespace Cable
             return charJson;
         }
 
+        public static JObject NullValue()
+        {
+            var json = new JObject();
+
+            json.Add(new JProperty("IsPrimitive", true));
+            json.Add(new JProperty("IsArray", false));
+            json.Add(new JProperty("IsNumeric", false));
+            json.Add(new JProperty("Type", "NullType"));
+            json.Add(new JProperty("Value", null));
+
+            return json;
+        }
         public static JObject Numeric(object value)
         {
             if (!IsNumber(value))
@@ -161,6 +173,11 @@ namespace Cable
         }
         public static JObject MakeJson(object obj)
         {
+            if (obj == null)
+            {
+                return NullValue();
+            }
+
             JToken token = JToken.FromObject(obj);
             if (token.Type != JTokenType.Object && token.Type != JTokenType.Array)
             {
@@ -252,9 +269,13 @@ namespace Cable
         {
             Func<Type, string> fullName = t => t.FullName.Split('`')[0];
 
-            if (!type.IsGenericType)
+            if (!type.IsGenericType && !type.IsPrimitive)
             {
                 return $"new {type.FullName}()";
+            }
+            else if (type.IsPrimitive)
+            {
+                return $"{type.FullName}";
             }
             else
             {

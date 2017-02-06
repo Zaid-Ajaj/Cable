@@ -281,6 +281,11 @@ namespace Cable.Bridge
         {
             var type = json["Type"].As<string>();
 
+            if (type == "NullType")
+            {
+                return null;
+            }
+
             if (json["IsPrimitive"].As<bool>() && !json["IsArray"].As<bool>())
             {
                 if (type == "DateTime")
