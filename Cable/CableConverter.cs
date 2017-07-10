@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Dynamic;
+using System.Globalization;
 
 namespace Cable
 {
@@ -49,7 +50,7 @@ namespace Cable
                 }
                 else if (type == "Int64")
                 {
-                    return long.Parse(json["Value"].Value<string>());
+                    return long.Parse(json["Value"].Value<string>(), CultureInfo.InvariantCulture);
                 }
                 else if (type == "UInt64")
                 {
@@ -57,7 +58,7 @@ namespace Cable
                 }
                 else if (type == "Int32" && objectType != typeof(char))
                 {
-                    return int.Parse(json["Value"].Value<string>());
+                    return int.Parse(json["Value"].Value<string>(), CultureInfo.InvariantCulture);
                 }
                 else if (type == "UInt32")
                 {
@@ -73,7 +74,7 @@ namespace Cable
                 }
                 else if (type == "Decimal")
                 {
-                    return decimal.Parse(json["Value"].Value<string>());
+                    return decimal.Parse(json["Value"].Value<string>(), CultureInfo.InvariantCulture);
                 }
                 else if (type == "SByte")
                 {
@@ -89,7 +90,7 @@ namespace Cable
                 }
                 else if( type == "Double")
                 {
-                    return double.Parse(json["Value"].Value<string>());
+                    return double.Parse(json["Value"].Value<string>(), CultureInfo.InvariantCulture);
                 }
                 else if (type == "Boolean")
                 {

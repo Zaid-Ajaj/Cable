@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Reflection;
+using System.Globalization;
 
 namespace Cable
 {
@@ -107,8 +108,27 @@ namespace Cable
             json.Add(new JProperty("IsArray", false));
             json.Add(new JProperty("IsNumeric", true));
             json.Add(new JProperty("Type", value.GetType().Name));
-            json.Add(new JProperty("Value", value.ToString()));
 
+            if (value.GetType() == typeof(double))
+            {
+                json.Add(new JProperty("Value", ((double)value).ToString(CultureInfo.InvariantCulture)));
+            }
+            else if (value.GetType() == typeof(int))
+            {
+                json.Add(new JProperty("Value", ((int)value).ToString(CultureInfo.InvariantCulture)));
+            }
+            else if (value.GetType() == typeof(decimal))
+            {
+                json.Add(new JProperty("Value", ((decimal)value).ToString(CultureInfo.InvariantCulture)));
+            }            
+            else if (value.GetType() == typeof(long))
+            {
+                json.Add(new JProperty("Value", ((long)value).ToString(CultureInfo.InvariantCulture)));
+            }
+            else
+            {
+                json.Add(new JProperty("Value", value.ToString()));
+            }
             return json;
         }
 

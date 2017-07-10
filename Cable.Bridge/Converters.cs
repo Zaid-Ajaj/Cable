@@ -1,6 +1,8 @@
 ﻿using Bridge;
+using Bridge.Html5;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace Cable.Bridge
 {
@@ -277,6 +279,11 @@ namespace Cable.Bridge
             }
         }
 
+        static double ParseDouble(string input)
+        {
+            return Script.Write<double>("parseFloat(input, 10)");
+        }
+
         public static object DecodeObject<T>(object json)
         {
             var type = json["Type"].As<string>();
@@ -318,7 +325,7 @@ namespace Cable.Bridge
 
                 if (type == "Int64") return long.Parse(json["Value"].As<string>());
 
-                if (type == "Double") return double.Parse(json["Value"].As<string>());
+                if (type == "Double") return ParseDouble(json["Value"].As<string>());
 
                 if (type == "Decimal") return decimal.Parse(json["Value"].As<string>());
 
