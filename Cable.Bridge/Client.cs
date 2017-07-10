@@ -101,6 +101,8 @@ namespace Cable.Bridge
             return char.ToUpper(input[0]).ToString() + input.Substring(1, input.Length - 1);
         }
 
+        public static Func<string, string, string> UrlMapper = (serviceName, methodName) => $"/{serviceName}/{methodName}";
+
         public static T Resolve<T>()
         {
             var serviceType = typeof(T);
@@ -127,7 +129,7 @@ namespace Cable.Bridge
                     service[$"{serviceFullName}${ToCamelCase(methodName)}"] = Lambda(async () =>
                     {
                         var parameters = Script.Write<object[]>("System.Linq.Enumerable.from(arguments).toArray()");
-                        var url = $"/{serviceName}/{Capitalized(methodName)}";
+                        var url = UrlMapper(serviceName, Capitalized(methodName));
                         var result = await PostJsonAsync(url, parameters);
                         return result;
                     });
@@ -137,7 +139,7 @@ namespace Cable.Bridge
                     service[$"{serviceFullName}${ToCamelCase(methodName)}"] = Lambda(() =>
                     {
                         var parameters = Script.Write<object[]>("System.Linq.Enumerable.from(arguments).toArray()");
-                        var url = $"/{serviceName}/{Capitalized(methodName)}";
+                        var url = UrlMapper(serviceName, Capitalized(methodName));
                         var result = PostJsonSync(url, parameters);
                         return result;
                     });
