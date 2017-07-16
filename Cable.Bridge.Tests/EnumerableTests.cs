@@ -56,7 +56,7 @@ namespace Cable.Bridge.Tests
 
             QUnit.Test("IEnumerable of int is serialized and deserialized correctly", assert =>
             {
-                IEnumerable<int> enu = System.Linq.Enumerable.Range(1, 10);
+                IEnumerable<int> enu = Enumerable.Range(1, 10);
                 var serialized = Json.Serialize(enu);
                 var deserialized = Json.Deserialize<IEnumerable<int>>(serialized);
                 assert.Equal(deserialized.Count(), enu.Count());

@@ -48,7 +48,7 @@ namespace Cable.Nancy.Tests
                 }
                 else
                 {
-                    Assert.AreEqual(objs[i], args[i]);
+                    Assert.That(objs[i], Is.EqualTo(args[i]));
                 }
             }
         }
@@ -84,7 +84,7 @@ namespace Cable.Nancy.Tests
             ulong uint64 = 40;
             byte nByte = 45;
             sbyte sByte = 50;
-            float Float = 2.4f;
+            float Float = 2.45f;
             double Double = 2.0;
             decimal Decimal = 2.3454m;
 

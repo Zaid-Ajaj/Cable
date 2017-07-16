@@ -56,7 +56,7 @@ namespace Cable
             value.Add(new JProperty("Minute", time.Minute));
             value.Add(new JProperty("Second", time.Second));
             value.Add(new JProperty("Millisecond", time.Millisecond));
-
+            value.Add(new JProperty("Kind", time.Kind.ToString()));
             obj.Add(new JProperty("Value", value));
             return obj;
         }

@@ -6,9 +6,6 @@ using System.Threading.Tasks;
 
 namespace Client
 {
-#if BRIDGE
-    [Bridge.Reflectable]
-#endif
     public interface IService
     {
         Task<bool> String(string input);

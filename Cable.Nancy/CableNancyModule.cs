@@ -29,6 +29,8 @@ namespace Cable.Nancy
     public static class NancyServer
     {
 
+        public static Func<string, string, string> UrlMapper = (serviceName, methodName) => $"/{serviceName}/{methodName}";
+
         private static bool CheckMethodOverloading<T>()
         {
             var type = typeof(T);
@@ -126,7 +128,7 @@ namespace Cable.Nancy
         static void RegisterRoute<TBase>(object implementation, MethodInfo method, NancyModule module, CableRouteSchema routeSchema)
         {
             var typeName = typeof(TBase).Name;
-            var url = $"/{typeName}/{method.Name}";
+            var url = UrlMapper(typeName, method.Name);
             var isReturningTask = method.ReturnType.BaseType == typeof(Task);
 
             routeSchema.Routes.Add(new CableRoute
@@ -144,8 +146,6 @@ namespace Cable.Nancy
                     using (var reader = new StreamReader(module.Request.Body))
                     {
                         var incomingJson = await reader.ReadToEndAsync();
-
-                        dynamic data;
 
                         dynamic[] paramArrayValue;
 

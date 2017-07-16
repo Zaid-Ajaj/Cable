@@ -13,13 +13,12 @@ namespace Cable.Console
     {
         static void Main(string[] args)
         {
-            using (var host = new NancyHost(new Uri("http://localhost:8080")))
+            using (var host = new NancyHost(new Uri("http://localhost:8090")))
             {
-                System.Console.WriteLine("Running Nancy server on http://localhost:8080");
+                System.Console.WriteLine("Running Nancy server on http://localhost:8090");
                 host.Start();
                 System.Console.ReadLine();
             }
         }
     }
-
 }

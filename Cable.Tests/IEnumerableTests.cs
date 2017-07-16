@@ -18,7 +18,6 @@ namespace Cable.Tests
             var sample = new WithIEnumerable { Numbers = Enumerable.Range(1, 10) };
 
             var serialized = Json.Serialize(sample);
-
             var deserialized = Json.Deserialize<WithIEnumerable>(serialized);
 
             var isValid =
@@ -27,6 +26,15 @@ namespace Cable.Tests
                  && sample.Numbers.All(number => deserialized.Numbers.Contains(number));
 
             Assert.AreEqual(isValid, true);
+        }
+
+        [TestMethod]
+        public void ComplexTypeWithNullIsConvertedCorrectly()
+        {
+            var sample = new WithIEnumerable { Numbers = null };
+            var serialized = Json.Serialize(sample);
+            var deserialize = Json.Deserialize<WithIEnumerable>(serialized);
+            Assert.IsTrue(deserialize.Numbers == null);
         }
     }
 }

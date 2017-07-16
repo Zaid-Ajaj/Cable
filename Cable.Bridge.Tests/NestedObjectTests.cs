@@ -45,7 +45,7 @@ namespace Cable.Bridge.Tests
                 assert.Equal(encoded["IsPrimitive"], false);
                 assert.Equal(encoded["IsArray"], false);
                 assert.Equal(encoded["IsNumeric"], false);
-                assert.Equal(encoded["Type"], "Cable.Bridge.Tests.NestedObjectTests.WrappedInt");
+                assert.Equal(encoded["Type"], "Cable.Bridge.Tests.NestedObjectTests+WrappedInt");
                 assert.Equal(encoded["Value"]["Id"] == null, false);
                 assert.Equal(encoded["Value"]["Id"]["IsPrimitive"], true);
                 assert.Equal(encoded["Value"]["Id"]["IsArray"], false);
@@ -109,7 +109,7 @@ namespace Cable.Bridge.Tests
 
 
 
-            QUnit.Test("Weird generic class in converted correctly", assert =>
+            QUnit.Test("Weird generic class is converted correctly", assert =>
             {
                
 

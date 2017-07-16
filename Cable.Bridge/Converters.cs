@@ -35,34 +35,35 @@ namespace Cable.Bridge
 
         public static bool IsArray<T>(T obj)
         {
-            var type = GetTypeof(obj);
+            var type = obj.GetType();
 
-            return type.Name == "Array"
-                || type.FullName.EndsWith("[]")
-                || type.Name == "ArrayEnumerable"
-                || Script.IsDefined(obj["toArray"]);
+            var typeName = type.Name;
+            var isBridgeGenerator = type.Name.StartsWith("GeneratorEnumerable");
+            var fullNameEndsWithBrackets = type.FullName.EndsWith("[]");
+            var hasAnToArrayProperty = Script.IsDefined(obj["toArray"]);
+
+            return typeName == "Array"
+                || isBridgeGenerator
+                || fullNameEndsWithBrackets
+                || typeName == "ArrayEnumerable"
+                || Script.IsDefined(obj["getEnumerator"]);
         }
 
 
 
         public static Property[] ExtactExistingProps(object input)
         {
-            var keys = Object.Keys(input);
             var props = Script.Write<Property[]>("[]");
-
-            for (int i = 0; i < keys.Length; i++)
+            var inputType = input.GetType();
+            var properties = inputType.GetProperties();
+            foreach(var prop in properties)
             {
-                if (keys[i].StartsWith("$"))
-                    continue;
-
                 var property = new Property
                 {
-                    Name = keys[i],
-                    Type = GetTypeof(input[keys[i]]),
-                    Value = input[keys[i]]
+                    Name = prop.Name,
+                    Type = prop.PropertyType,
+                    Value = input[prop.Name]
                 };
-
-
                 Script.Write("props.push(property)");
             }
 
@@ -150,7 +151,7 @@ namespace Cable.Bridge
 
         public static object EncodeObject(object value)
         {
-            var type = GetTypeof(value);
+            var type = value.GetType();
 
             if (IsPrimitive(value))
             {
@@ -269,8 +270,7 @@ namespace Cable.Bridge
 
                 foreach(var prop in ExtactExistingProps(value))
                 {
-
-                    //@ props[prop.getName()] = Cable.Bridge.Converters.encodeObject(prop.getValue());
+                    props[prop.Name] = EncodeObject(prop.Value);
                 }
 
                 result["Value"] = props;
@@ -304,6 +304,8 @@ namespace Cable.Bridge
                     var minute = json["Value"]["Minute"].As<int>();
                     var second = json["Value"]["Second"].As<int>();
                     var milliseconds = json["Value"]["Millisecond"].As<int>();
+                    var kind = json["Value"]["Kind"].As<string>();
+                    // TODO: use DateTime.Kind in the constructor when Bridge allows it
                     return new DateTime(year, month, day, hour, minute, second, milliseconds);
                 }
 
@@ -346,7 +348,6 @@ namespace Cable.Bridge
             {
                 if (json["Type"].As<string>() == "Array")
                 {
-                    
                     var encodedItems = json["Value"].As<object[]>();
                     var arr = new object[encodedItems.Length];
 
@@ -395,8 +396,8 @@ namespace Cable.Bridge
                 {
                     var propValue = json["Value"][propNames[i]];
                     var decoded = DecodeObject<object>(propValue);
-                    var setPropName = "set" + propNames[i];
-                    instance[setPropName].As<Action<object>>()(decoded);
+                    var setPropName = propNames[i];
+                    instance[setPropName] = decoded;
                 }
 
                 return instance;

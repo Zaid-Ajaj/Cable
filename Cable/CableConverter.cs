@@ -46,7 +46,9 @@ namespace Cable
                     var minute = json["Value"]["Minute"].Value<int>();
                     var second = json["Value"]["Second"].Value<int>();
                     var millesecond = json["Value"]["Millisecond"].Value<int>();
-                    return new DateTime(year, month, day, hour, minute, second, millesecond);
+                    var serializedKind = json["Value"]["Kind"].Value<string>();
+                    var kind = (DateTimeKind)Enum.Parse(typeof(DateTimeKind), serializedKind);
+                    return new DateTime(year, month, day, hour, minute, second, millesecond, kind);
                 }
                 else if (type == "Int64")
                 {
@@ -62,15 +64,15 @@ namespace Cable
                 }
                 else if (type == "UInt32")
                 {
-                    return uint.Parse(json["Value"].Value<string>());
+                    return uint.Parse(json["Value"].Value<string>(), CultureInfo.InvariantCulture);
                 }
                 else if (type == "Int16")
                 {
-                    return short.Parse(json["Value"].Value<string>());
+                    return short.Parse(json["Value"].Value<string>(), CultureInfo.InvariantCulture);
                 }
                 else if (type == "UInt16")
                 {
-                    return ushort.Parse(json["Value"].Value<string>());
+                    return ushort.Parse(json["Value"].Value<string>(), CultureInfo.InvariantCulture);
                 }
                 else if (type == "Decimal")
                 {
@@ -78,15 +80,15 @@ namespace Cable
                 }
                 else if (type == "SByte")
                 {
-                    return sbyte.Parse(json["Value"].Value<string>());
+                    return sbyte.Parse(json["Value"].Value<string>(), CultureInfo.InvariantCulture);
                 }
                 else if (type == "Byte")
                 {
-                    return byte.Parse(json["Value"].Value<string>());
+                    return byte.Parse(json["Value"].Value<string>(), CultureInfo.InvariantCulture);
                 }
                 else if (type == "Single")
                 {
-                    return float.Parse(json["Value"].Value<string>());
+                    return float.Parse(json["Value"].Value<string>(), CultureInfo.InvariantCulture);
                 }
                 else if( type == "Double")
                 {
@@ -115,29 +117,20 @@ namespace Cable
                 else if (type == "Array")
                 {
                     var arr = (JArray)json["Value"];
-
-                    //dynamic[] result = new dynamic[arr.Count];
-
-                    //for(int i = 0; i < arr.Count; i++)
-                    //{
-                    //    result[i] = serializer.Deserialize(arr[i].CreateReader(), objectType);
-                    //}
-
-                    //return result;
-
-                    if (
-                           arr.Count > 0 
+                    if (   arr.Count > 0 
                         && objectType != null 
                         && objectType != typeof(object[]) 
                         && objectType != typeof(object)
                         && !IsEnumerableOfSomething(objectType)
                       )
                     {
-                        // var arrType = ReadJson(arr[0].CreateReader(), null, null, serializer).GetType();
+                        // get the type of the array
                         var arrType = objectType.GetElementType();
+                        // create a typed array with the approriate length
                         var array = Array.CreateInstance(arrType, arr.Count);
                         for (int i = 0; i < arr.Count; i++)
                         {
+                            // deserialize each value of the array
                             var value = serializer.Deserialize(arr[i].CreateReader(), arrType);
                             array.SetValue(value, i);
                         }
@@ -173,24 +166,6 @@ namespace Cable
                         }
                         return array.ToArray();
                     }
-
-                    //if (objectType != null && objectType.IsArray && objectType != typeof(IEnumerable<>))
-                    //{
-                    //    dynamic array = Activator.CreateInstance(objectType);
-                    //    for (int i = 0; i < arr.Count; i++)
-                    //    {
-                    //        // var value = serializer.Deserialize(arr[i].CreateReader());
-                    //        dynamic value = ReadJson(arr[i].CreateReader(), null, null, serializer);
-                    //        array[i] = value;
-                    //    }
-
-                    //    return array;
-                    //}
-                    //else
-                    //{
-                      
-                    //}
-
 
                 } 
                 else if (type == "List")
