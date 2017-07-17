@@ -68,7 +68,7 @@ namespace Cable.Bridge.Tests
 
             QUnit.Test("Cable.Resolve doesn't throw exception on reflectable interface where all methods have return type of Task", assert =>
             {
-                var service = Client.Resolve<IService>();
+                var service = BridgeClient.Resolve<IService>();
                 assert.Equal(true, Script.IsDefined(service));
             });
         }

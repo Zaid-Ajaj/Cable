@@ -1,9 +1,31 @@
 {
-    "output": "../Cable.Console/bin/Debug/client/js"
+    "output": "../Cable.Console/bin/Debug/client/js",
     
-    // Uncomment to add TypeScript Definition file (.d.ts) generation to your project.
-    // , "generateTypeScript": true
+   // Enable the Bridge Console.
+    // Default is false.
+    "console": {
+        "enabled": true
+    },
 
-    // More options available at: 
-    // http://bridge.net/docs/global-configuration
+    // Enable browser debugging of C# files.
+    // Default is false.
+    "sourceMap": {
+        "enabled": true
+    },
+
+    // Set to true to disable Reflection metadata generation.
+    // Default is false.
+    "reflection": {
+        "disabled": false
+    },
+
+
+    // Generate TypeScript Definition (.d.ts) files.
+    // Default is false.
+    "generateTypeScript": false,
+
+    // Delete everything from the output folder
+    // Default is false
+    "cleanOutputFolderBeforeBuild": true,
+    "combineScripts": true
 }

@@ -30,8 +30,8 @@ namespace Cable.Nancy.ClientTests
 
         public static async void Main()
         {
-            var Server = Bridge.Client.Resolve<IService>();
-
+            var Server = BridgeClient.Resolve<IService>();
+            Log(Server);
             QUnit.Module("Nancy Client Tests");
             QUnit.Test("Client is working", assert => assert.Equal(true, true));
 

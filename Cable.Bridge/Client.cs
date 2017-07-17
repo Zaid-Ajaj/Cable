@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Cable.Bridge
 {
-    public static class Client
+    public static class BridgeClient
     {
         private static Dictionary<string, object> InterfacesCache = new Dictionary<string, object>();
 
@@ -126,7 +126,7 @@ namespace Cable.Bridge
 
                 if (method.ReturnType == typeof(Task))
                 {
-                    service[$"{serviceFullName}${ToCamelCase(methodName)}"] = Lambda(async () =>
+                    service[$"{serviceFullName}${Capitalized(methodName)}"] = Lambda(async () =>
                     {
                         var parameters = Script.Write<object[]>("System.Linq.Enumerable.from(arguments).toArray()");
                         var url = UrlMapper(serviceName, Capitalized(methodName));
@@ -136,7 +136,7 @@ namespace Cable.Bridge
                 }
                 else
                 {
-                    service[$"{serviceFullName}${ToCamelCase(methodName)}"] = Lambda(() =>
+                    service[$"{serviceFullName}${Capitalized(methodName)}"] = Lambda(() =>
                     {
                         var parameters = Script.Write<object[]>("System.Linq.Enumerable.from(arguments).toArray()");
                         var url = UrlMapper(serviceName, Capitalized(methodName));

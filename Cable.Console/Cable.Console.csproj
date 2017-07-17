@@ -78,18 +78,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="bin\Debug\client\html\index.html" />
-    <Content Include="bin\Debug\client\js\bridge.js" />
-    <Content Include="bin\Debug\client\js\bridge.min.js" />
-    <Content Include="bin\Debug\client\js\cable.bridge.js" />
-    <Content Include="bin\Debug\client\js\cable.bridge.min.js" />
-    <Content Include="bin\Debug\client\js\cable.nancy.clientTests.js" />
-    <Content Include="bin\Debug\client\js\cable.nancy.clientTests.min.js" />
-    <Content Include="bin\Debug\client\js\client.js" />
-    <Content Include="bin\Debug\client\js\client.min.js" />
+    <Content Include="bin\Debug\client\index.html" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="bin\Debug\client\css\" />
+    <Folder Include="bin\Debug\client\js\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
