@@ -42,22 +42,9 @@ namespace Cable.Console
         }
 
 
-        public Task<object[]> NumericPrimitives
-        (
-            short Int16,
-            ushort UInt16,
-            int Int,
-            uint UInt,
-            long Int64,
-            ulong UInt64,
-            byte Byte,
-            sbyte SByte,
-            float Float,
-            double Double,
-            decimal Decimal
-        )
+        public Task<object[]> NumericPrimitives(int Int, long Int64, double Double, decimal Decimal)
         {
-            var result = new object[] { Int16, UInt16, Int, UInt, Int64, UInt64, Byte, SByte, Float, Double, Decimal };
+            var result = new object[] { Int, Int64, Double, Decimal };
             return Task.FromResult(result);
         }
 
@@ -132,6 +119,12 @@ namespace Cable.Console
             return Task.FromResult(result);
         }
 
+        public Task<WrappedDouble> EchoWrappedDouble(WrappedDouble x)
+        {
+            return Task.FromResult(x);
+        }
+
+
         public Task<long> SumMatrixOfLong(long[][] longs)
         {
             var result = longs.SelectMany(xs => xs).Sum();
@@ -167,5 +160,9 @@ namespace Cable.Console
 
         public Task<string> ReturnSecond(DoubleGeneric<int, string> g) => Task.FromResult(g.Second);
 
+        public Task<double> EchoDouble(double x)
+        {
+            return Task.FromResult(x);
+        }
     }
 }

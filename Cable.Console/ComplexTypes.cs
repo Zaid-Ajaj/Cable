@@ -17,6 +17,11 @@ namespace Client
         public DateTime Value { get; set; }
     }
 
+    public class WrappedDouble
+    {
+        public double Value { get; set; }
+    }
+
     public class SimpleNested
     {
         public int Int { get; set; }

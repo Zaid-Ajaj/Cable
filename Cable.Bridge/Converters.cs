@@ -90,13 +90,13 @@ namespace Cable.Bridge
             return EliminateBoxing(result);
         }
 
-        public static object EncodeNumeric<T>(T value)
+        public static object EncodeNumeric<T>(T value, string typeName = "")
         {
             var result = Script.Write<object>("{}");
             result["IsPrimitive"] = true;
             result["IsArray"] = false;
             result["IsNumeric"] = true;
-            result["Type"] = GetTypeof(value).Name;
+            result["Type"] = string.IsNullOrEmpty(typeName) ? value.GetType().Name : typeName;
             result["Value"] = value.ToString();
             return EliminateBoxing(result);
         }
@@ -163,7 +163,7 @@ namespace Cable.Bridge
             return encodedObject;
         }
 
-        public static object EncodeObject(object value)
+        public static object EncodeObject(object value, string typeName = "")
         {
             var type = value.GetType();
 
@@ -179,7 +179,7 @@ namespace Cable.Bridge
                 }
                 else if (IsNumeric(value))
                 {
-                    return EncodeNumeric(value);
+                    return EncodeNumeric(value, typeName);
                 }
                 else if (type == typeof(string))
                 {
@@ -288,7 +288,7 @@ namespace Cable.Bridge
 
                 foreach(var prop in ExtactExistingProps(value))
                 {
-                    var nextValue = EncodeObject(prop.Value);
+                    var nextValue = EncodeObject(prop.Value, prop.Type.Name);
                     props[prop.Name] = EliminateBoxing(nextValue);
                 }
 

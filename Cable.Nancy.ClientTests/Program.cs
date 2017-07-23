@@ -16,6 +16,9 @@ namespace Cable.Nancy.ClientTests
         [Template("console.log({x})")]
         static extern void Log(object x);
 
+
+        static T Id<T>(T value) => value;
+
         static void DatesEqual(Assert assert, DateTime x, DateTime y)
         {
             assert.Equal(x.Year, y.Year);
@@ -68,49 +71,28 @@ namespace Cable.Nancy.ClientTests
                 DatesEqual(assert, echoedWrappedDateTime.Value, wrappedDateTime.Value);
             });
 
-            ////short int16 = 5;
-            ////ushort uint16 = 10;
-            ////int int32 = 20;
-            ////uint uint32 = 30;
-            ////long int64 = 35;
-            ////ulong uint64 = 40;
-            ////byte nByte = 45;
-            ////sbyte sByte = 50;
-            ////float Float = 2.4f;
-            ////double Double = 2.0;
-            ////decimal Decimal = 2.3454m;
+            int int32 = 20;
+            long int64 = 35L;
+            double Double = 2.1;
+            decimal Decimal = 2.3454m;
 
-            ////var numericResults = await server.NumericPrimitives
-            ////(
-            ////   int16,
-            ////   uint16,
-            ////   int32,
-            ////   uint32,
-            ////   int64,
-            ////   uint64,
-            ////   nByte,
-            ////   sByte,
-            ////   Float,
-            ////   Double,
-            ////   Decimal
-            ////);
+            var numericResults = await Server.NumericPrimitives
+            (
+               int32,
+               int64,
+               Double,
+               Decimal
+            );
 
 
-            ////QUnit.Test("IService.NumericPrimitives()", assert =>
-            ////{
-            ////    assert.Equal(numericResults.Length, 11);
-            ////    assert.Equal(numericResults[0].As<short>() == int16, true);
-            ////    assert.Equal(numericResults[1].As<ushort>() == uint16, true);
-            ////    assert.Equal(numericResults[2].As<int>() == int32, true);
-            ////    assert.Equal(numericResults[3].As<uint>() == uint32, true);
-            ////    assert.Equal(numericResults[4].As<long>() == int64, true);
-            ////    assert.Equal(numericResults[5].As<ulong>() == uint64, true);
-            ////    assert.Equal(numericResults[6].As<byte>() == nByte, true);
-            ////    assert.Equal(numericResults[7].As<sbyte>() == sByte, true);
-            ////    assert.Equal(numericResults[8].As<float>() == Float, true);
-            ////    assert.Equal(numericResults[9].As<double>() == Double, true);
-            ////    assert.Equal(numericResults[10].As<decimal>() == Decimal, true);
-            ////});
+            QUnit.Test("IService.NumericPrimitives()", assert =>
+            {
+                assert.Equal(numericResults.Length, 4);
+                assert.Equal(numericResults[0].As<int>() == int32, true);
+                assert.Equal(numericResults[1].As<long>() == int64, true);
+                assert.Equal(numericResults[2].As<double>() == Double, true);
+                assert.Equal(numericResults[3].As<decimal>() == Decimal, true);
+            });
 
             int[] arrayOfInts = { 1, 2, 3 };
             var resultArrayOfInts = await Server.ArrayOfInts(arrayOfInts);
@@ -144,6 +126,32 @@ namespace Cable.Nancy.ClientTests
                 assert.Equal(lengthsOfArrays[1], 2);
                 assert.Equal(lengthsOfArrays[2], 4);
             });
+
+
+            var inputDouble1 = 2.523;
+            var inputDouble2 = 5.342;
+
+            var outputDouble1 = await Server.EchoDouble(inputDouble1);
+            var outputDouble2 = await Server.EchoDouble(inputDouble2);
+
+            QUnit.Test("IService.EchoDouble()", assert =>
+            {
+                assert.Equal(inputDouble1, outputDouble1);
+                assert.Equal(inputDouble2, outputDouble2);
+            });
+
+            var wrappedDouble1 = new WrappedDouble { Value = 4.45 };
+            var wrappedDouble2 = new WrappedDouble { Value = 2.0 };
+
+            var echoedWrappedDouble1 = await Server.EchoWrappedDouble(wrappedDouble1);
+            var echoedWrappedDouble2 = await Server.EchoWrappedDouble(wrappedDouble2);
+
+            QUnit.Test("IService.EchoWrappedDouble()", assert =>
+            {
+                assert.Equal(wrappedDouble1.Value, echoedWrappedDouble1.Value);
+                assert.Equal(wrappedDouble2.Value, echoedWrappedDouble2.Value);
+            });
+
 
             var resultIntArrayNoArgs = await Server.NoArgumentsReturningIntArray();
 

@@ -14,22 +14,13 @@ namespace Client
 
         Task<object[]> StringIntCharDateTime(string arg1, int arg2, char arg3, DateTime date);
 
-        Task<object[]> NumericPrimitives
-        (
-            short Int16,
-            ushort UInt16,
-            int Int,
-            uint UInt,
-            long Int64,
-            ulong UInt64,
-            byte Byte,
-            sbyte SByte,
-            float Float,
-            double Double,
-            decimal Decimal
-        );
+        Task<object[]> NumericPrimitives(int Int, long Int64, double Double, decimal Decimal);
 
         Task<int[]> ArrayOfInts(int[] arr);
+
+        Task<double> EchoDouble(double x);
+
+        Task<WrappedDouble> EchoWrappedDouble(WrappedDouble x);
 
         Task<int[]> ArrayOfStringsReturningInts(string[] arr);
 
@@ -75,12 +66,5 @@ namespace Client
 
         Task<string> ReturnSecond(DoubleGeneric<int, string> g);
 
-        //Task<bool> ArrayOfDecimals(decimal[] decimals);
-
-        //Task<bool> ArrayOfStrings(string[] strings);
-
-        //Task<bool> ArrayOfObjects(object[] objects);
-
-        //Task<bool> ArrayOfArrays(object[][] matrix);
     }
 }

@@ -14,8 +14,7 @@ namespace Cable.Bridge
         {
             var encoded = Converters.EncodeObject(obj);
             var encodedWithoutBoxing = Converters.EliminateBoxing(encoded);
-            var stringified = JSON.Stringify(encodedWithoutBoxing);
-            return stringified;
+            return JSON.Stringify(encodedWithoutBoxing);
         }
 
         public static T Deserialize<T>(string json)
