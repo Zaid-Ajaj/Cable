@@ -121,7 +121,7 @@ namespace Cable.Bridge
 
             var methods = serviceType.GetMethods();
 
-            if (methods.Length == 0) throw new ArgumentException("The interface does not have any methods, if there are any methods then annotate the interface with the [Reflectable] attribute");
+            if (methods.Length == 0) throw new ArgumentException("The interface does not have any methods");
 
             var service = Script.Write<object>("{}");
 
@@ -133,10 +133,6 @@ namespace Cable.Bridge
                 {
                     service[instanceMethodName] = Lambda(async () =>
                     {
-                        Logger($"Invoking Async function: {Capitalized(methodName)}");
-                        Logger(method.Name);
-                        Logger(method.ReturnType.Name);
-                        Logger(method.ReturnType.FullName);
                         var parameters = Script.Write<object[]>("System.Linq.Enumerable.from(arguments).toArray()");
                         var url = UrlMapper(serviceName, Capitalized(methodName));
                         var result = await PostJsonAsync(url, parameters);
@@ -147,10 +143,6 @@ namespace Cable.Bridge
                 {
                     service[instanceMethodName] = Lambda(() =>
                     {
-                        Logger($"Invoking Sync function: {Capitalized(methodName)}");
-                        Logger(method.Name);
-                        Logger(method.ReturnType.Name);
-                        Logger(method.ReturnType.FullName);
                         var parameters = Script.Write<object[]>("System.Linq.Enumerable.from(arguments).toArray()");
                         var url = UrlMapper(serviceName, Capitalized(methodName));
                         var result = PostJsonSync(url, parameters);
