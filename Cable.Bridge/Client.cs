@@ -71,7 +71,11 @@ namespace Cable.Bridge
                     {
                         var json = JSON.Parse(xmlHttp.ResponseText);
 
-                        if (json["$exception"].As<bool>())
+                        if (json == null)
+                        {
+                            tcs.SetResult(null);
+                        }
+                        else if (Script.IsDefined(json["$exception"]) && json["$exception"].As<bool>())
                         {
                             tcs.SetException(new Exception(json["$exceptionData"]["Message"].As<string>()));
                         }

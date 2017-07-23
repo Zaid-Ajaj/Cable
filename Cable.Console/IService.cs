@@ -18,6 +18,8 @@ namespace Client
 
         Task<int[]> ArrayOfInts(int[] arr);
 
+        Task<string> EchoNullString();
+
         Task<double> EchoDouble(double x);
 
         Task<WrappedDouble> EchoWrappedDouble(WrappedDouble x);

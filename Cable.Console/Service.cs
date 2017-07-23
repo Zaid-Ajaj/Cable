@@ -147,6 +147,12 @@ namespace Cable.Console
             return Task.FromResult(xs.Sum());
         }
 
+        public Task<string> EchoNullString()
+        {
+            string output = null;
+            return Task.FromResult(output);
+        }
+
         public Task<int> GenericInt(Generic<int> g) => Task.FromResult(g.Value);
 
         public Task<SimpleNested> GenericSimpleNested(Generic<SimpleNested> g) => Task.FromResult(g.Value);

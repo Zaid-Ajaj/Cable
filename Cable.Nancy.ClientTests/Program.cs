@@ -334,6 +334,10 @@ namespace Cable.Nancy.ClientTests
                 assert.Equal(resultSecond, "Zaid");
             });
 
+
+            var nullResult = await Server.EchoNullString();
+
+            QUnit.Test("IService.EchoNullString()", assert => assert.Equal(nullResult, null));
         }
     }
 }
