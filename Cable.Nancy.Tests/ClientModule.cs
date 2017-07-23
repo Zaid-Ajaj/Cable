@@ -8,5 +8,5 @@ namespace Cable.Nancy.Tests
         {
             NancyServer.RegisterRoutesFor(this, service);
         }
-    }
+    } 
 }

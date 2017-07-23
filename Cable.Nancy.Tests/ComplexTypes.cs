@@ -16,7 +16,7 @@ namespace Cable.Nancy.Tests
         public DateTime DateOfBirth { get; set; }
         public bool IsMarried { get; set; }
         public Gender Gender { get; set; }
-    }
+    }   
 
 
     public class Generic<T>

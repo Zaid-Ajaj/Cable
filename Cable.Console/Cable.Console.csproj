@@ -79,6 +79,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="bin\Debug\client\index.html" />
+    <Content Include="bin\Debug\client\libs\qunit-1.18.0.js" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="bin\Debug\client\js\" />

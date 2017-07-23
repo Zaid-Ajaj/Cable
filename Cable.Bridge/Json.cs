@@ -13,7 +13,8 @@ namespace Cable.Bridge
         public static string Serialize(object obj)
         {
             var encoded = Converters.EncodeObject(obj);
-            var stringified = JSON.Stringify(encoded);
+            var encodedWithoutBoxing = Converters.EliminateBoxing(encoded);
+            var stringified = JSON.Stringify(encodedWithoutBoxing);
             return stringified;
         }
 

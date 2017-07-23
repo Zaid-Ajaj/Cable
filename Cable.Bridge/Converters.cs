@@ -86,9 +86,8 @@ namespace Cable.Bridge
             value["Minute"] = time.Minute;
             value["Second"] = time.Second;
             value["Millisecond"] = time.Millisecond;
-
-            result["Value"] = value;
-            return result;
+            result["Value"] = EliminateBoxing(value);
+            return EliminateBoxing(result);
         }
 
         public static object EncodeNumeric<T>(T value)
@@ -99,7 +98,7 @@ namespace Cable.Bridge
             result["IsNumeric"] = true;
             result["Type"] = GetTypeof(value).Name;
             result["Value"] = value.ToString();
-            return result;
+            return EliminateBoxing(result);
         }
 
         public static object EncodeChar<T>(T value)
@@ -110,7 +109,7 @@ namespace Cable.Bridge
             result["IsNumeric"] = false;
             result["Type"] = "Char";
             result["Value"] = value;
-            return result;
+            return EliminateBoxing(result);
         }
 
         public static object EncodeString(object value)
@@ -121,7 +120,7 @@ namespace Cable.Bridge
             result["IsNumeric"] = false;
             result["Type"] = "String";
             result["Value"] = value;
-            return result;
+            return EliminateBoxing(result);
         }
 
         public static object EncodeBoolean(object value)
@@ -132,7 +131,7 @@ namespace Cable.Bridge
             result["IsNumeric"] = false;
             result["Type"] = "Boolean";
             result["Value"] = value;
-            return result;
+            return EliminateBoxing(result);
         }
 
         public static object EncodeTimeSpan(object timeSpan)
@@ -143,11 +142,26 @@ namespace Cable.Bridge
             result["IsNumeric"] = false;
             result["Type"] = "TimeSpan";
             result["Value"] = timeSpan.As<TimeSpan>().Ticks.ToString();
-            return result;
+            return EliminateBoxing(result);
         }
 
         [Template("Bridge.getType({value})")]
         static extern Type GetTypeof(object value);
+
+        public static object EliminateBoxing(object encodedObject)
+        {
+            var keys = Object.Keys(encodedObject);
+            for (var i = 0; i < keys.Length; i++)
+            {
+                var value = encodedObject[keys[i]];
+                if (Script.IsDefined(value["$boxed"]))
+                {
+                    encodedObject[keys[i]] = value["v"];
+                }
+            }
+
+            return encodedObject;
+        }
 
         public static object EncodeObject(object value)
         {
@@ -200,6 +214,7 @@ namespace Cable.Bridge
                     for(int i = 0; i < Script.Write<int>("value.length"); i++)
                     {
                         var subValue = EncodeObject(Script.Write<object>("value[i]"));
+                        subValue = EliminateBoxing(subValue);
                         Script.Write("values.push(subValue)");
                     }
 
@@ -214,7 +229,8 @@ namespace Cable.Bridge
 
                     for (int i = 0; i < list.Length; i++)
                     {
-                        valuesFromList[i] = EncodeObject(list[i]);
+                        var encodedObject = EncodeObject(list[i]);
+                        valuesFromList[i] = EliminateBoxing(encodedObject);
                     }
 
                     result["Value"] = valuesFromList;
@@ -228,7 +244,8 @@ namespace Cable.Bridge
 
                     for (int i = 0; i < list.Length; i++)
                     {
-                        valuesFromList[i] = EncodeObject(list[i]);
+                        var encodedObject = EncodeObject(list[i]);
+                        valuesFromList[i] = EliminateBoxing(encodedObject);
                     }
 
                     result["Value"] = valuesFromList;
@@ -244,7 +261,8 @@ namespace Cable.Bridge
 
                         for (int i = 0; i < list.Length; i++)
                         {
-                            valuesFromList[i] = EncodeObject(list[i]);
+                            var encodedObject = EncodeObject(list[i]);
+                            valuesFromList[i] = EliminateBoxing(encodedObject);
                         }
 
                         result["Value"] = valuesFromList;
@@ -270,7 +288,8 @@ namespace Cable.Bridge
 
                 foreach(var prop in ExtactExistingProps(value))
                 {
-                    props[prop.Name] = EncodeObject(prop.Value);
+                    var nextValue = EncodeObject(prop.Value);
+                    props[prop.Name] = EliminateBoxing(nextValue);
                 }
 
                 result["Value"] = props;
@@ -306,7 +325,8 @@ namespace Cable.Bridge
                     var milliseconds = json["Value"]["Millisecond"].As<int>();
                     var kind = json["Value"]["Kind"].As<string>();
                     // TODO: use DateTime.Kind in the constructor when Bridge allows it
-                    return new DateTime(year, month, day, hour, minute, second, milliseconds);
+                    var result = new DateTime(year, month, day, hour, minute, second, milliseconds);
+                    return EliminateBoxing(result as object);
                 }
 
                 if (type == "String") return json["Value"];

@@ -46,9 +46,9 @@ namespace Cable
                     var minute = json["Value"]["Minute"].Value<int>();
                     var second = json["Value"]["Second"].Value<int>();
                     var millesecond = json["Value"]["Millisecond"].Value<int>();
-                    var serializedKind = json["Value"]["Kind"].Value<string>();
-                    var kind = (DateTimeKind)Enum.Parse(typeof(DateTimeKind), serializedKind);
-                    return new DateTime(year, month, day, hour, minute, second, millesecond, kind);
+                   //var serializedKind = json["Value"]["Kind"].Value<string>();
+                   //var kind = (DateTimeKind)Enum.Parse(typeof(DateTimeKind), serializedKind);
+                    return new DateTime(year, month, day, hour, minute, second, millesecond);
                 }
                 else if (type == "Int64")
                 {

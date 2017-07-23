@@ -3,9 +3,6 @@
 
 namespace Client
 {
-    #if BRIDGE
-    [Bridge.Reflectable]
-    #endif
     public class Person
     {
         public string Name { get; set; }
@@ -15,9 +12,11 @@ namespace Client
         public bool IsMarried { get; set; }
     }
 
-#if BRIDGE
-    [Bridge.Reflectable]
-#endif
+    public class WrappedDateTime
+    {
+        public DateTime Value { get; set; }
+    }
+
     public class SimpleNested
     {
         public int Int { get; set; }
@@ -27,18 +26,12 @@ namespace Client
         public decimal Decimal { get; set; }
     }
 
-#if BRIDGE
-    [Bridge.Reflectable]
-#endif
     public class Generic<T>
     {
         public T Value { get; set; }
     }
 
 
-#if BRIDGE
-    [Bridge.Reflectable]
-#endif
     public class DoubleGeneric<T, U>
     {
         public T First { get; set; }

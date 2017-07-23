@@ -28,14 +28,28 @@ namespace Cable.Nancy
 
     public static class NancyServer
     {
+        /// <summary>
+        /// Customize how the route paths are generated. By default, the url mapper is (serviceName, methodName) => $"/{serviceName}/{methodName}".
+        /// </summary>
+        /// <param name="mapper"></param>
+        public static void UrlMapper(Func<string, string, string> mapper)
+        {
+            if (mapper == null)
+            {
+                // Just keep using the default mapper
+                return;
+            }
 
-        public static Func<string, string, string> UrlMapper = (serviceName, methodName) => $"/{serviceName}/{methodName}";
+            urlMapper = mapper;
+        }
+
+        private static Func<string, string, string> urlMapper = (serviceName, methodName) => $"/{serviceName}/{methodName}";
 
         private static bool CheckMethodOverloading<T>()
         {
             var type = typeof(T);
 
-            if (!type.IsInterface) throw new ArgumentException("Generic type must be an interface");
+            if (!type.IsInterface) throw new ArgumentException("Injected service type must be an interface");
 
             var groups = typeof(T).GetMethods().Select(method => method.Name).GroupBy(x => x).Where(grouping => grouping.Count() > 1);
 
@@ -72,7 +86,12 @@ namespace Cable.Nancy
             }
         }
 
-
+        /// <summary>
+        /// Generates POST routes automatically for the a NancyModule.
+        /// </summary>
+        /// <typeparam name="TBase">The type of the service (must be an interface)</typeparam>
+        /// <param name="module">The NancyModule in which the routes will be created</param>
+        /// <param name="implementation">An implementation of the service interface type</param>
         public static CableRouteSchema RegisterRoutesFor<TBase>(NancyModule module, TBase implementation)
         {
             var baseType = typeof(TBase);
@@ -89,8 +108,6 @@ namespace Cable.Nancy
                 ServiceName = serviceName
             };
             
-            if (!baseType.IsInterface) throw new ArgumentException("Generic type argument TBase must be an interface");
-
             CheckMethodOverloading<TBase>();
 
             var defaultMethods = new string[] { "Equals", "ToString", "GetHashCode", "GetType" };
@@ -100,7 +117,6 @@ namespace Cable.Nancy
             foreach(var method in publicMethods)
             {  
                 if (method.ContainsGenericParameters) throw new ArgumentException($"Method {method.Name} contains generic type parameters, this is not supported.");
-
                 RegisterRoute<TBase>(implementation, method, module, routeSchema);
             }
 
@@ -128,7 +144,7 @@ namespace Cable.Nancy
         static void RegisterRoute<TBase>(object implementation, MethodInfo method, NancyModule module, CableRouteSchema routeSchema)
         {
             var typeName = typeof(TBase).Name;
-            var url = UrlMapper(typeName, method.Name);
+            var url = urlMapper(typeName, method.Name);
             var isReturningTask = method.ReturnType.BaseType == typeof(Task);
 
             routeSchema.Routes.Add(new CableRoute

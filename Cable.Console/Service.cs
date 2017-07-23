@@ -19,6 +19,12 @@ namespace Cable.Console
             return Task.FromResult(result);
         }
 
+
+        public Task<WrappedDateTime> EchoWrappedDateTime(WrappedDateTime value)
+        {
+            return Task.FromResult(value);
+        }
+
         public Task<bool> StringInt(string arg1, int arg2)
         {
             bool result = true;

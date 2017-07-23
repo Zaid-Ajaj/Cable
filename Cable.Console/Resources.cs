@@ -8,6 +8,7 @@ namespace Cable.Console
         {
             Get["/"] = _ => Response.AsFile("client/index.html");
             Get["js/{file}"] = p => Response.AsFile("client/js/" + (string)p.file);
+            Get["libs/{file}"] = p => Response.AsFile("client/libs/" + (string)p.file);
         }
     }
 }

@@ -38,6 +38,7 @@ namespace Cable.Nancy.ClientTests
             QUnit.Test("Client.Resolve<IService>() is defined", assert => assert.Equal(Script.IsDefined(Server), true));
 
             var stringResult = await Server.String("hello");
+
             QUnit.Test("IService.String()", assert => assert.Equal(stringResult, true));
 
 
@@ -50,60 +51,72 @@ namespace Cable.Nancy.ClientTests
                 assert.Equal(objectsResult[1], 5);
                 assert.Equal(objectsResult[2], 'a');
 
-                var dateFromObjects = objectsResult[3].As<DateTime>();
+                var dateFromObjects = (DateTime)objectsResult[3];
                 DatesEqual(assert, dateFromObjects, now);
             });
 
 
-            //short int16 = 5;
-            //ushort uint16 = 10;
-            //int int32 = 20;
-            //uint uint32 = 30;
-            //long int64 = 35;
-            //ulong uint64 = 40;
-            //byte nByte = 45;
-            //sbyte sByte = 50;
-            //float Float = 2.4f;
-            //double Double = 2.0;
-            //decimal Decimal = 2.3454m;
+            var wrappedDateTime = new WrappedDateTime
+            {
+                Value = new DateTime(2017, 10, 12, 20, 30)
+            };
 
-            //var numericResults = await server.NumericPrimitives
-            //(
-            //   int16,
-            //   uint16,
-            //   int32,
-            //   uint32,
-            //   int64,
-            //   uint64,
-            //   nByte,
-            //   sByte,
-            //   Float,
-            //   Double,
-            //   Decimal
-            //);
+            var echoedWrappedDateTime = await Server.EchoWrappedDateTime(wrappedDateTime);
+
+            QUnit.Test("IService.EchoWrappedDateTime()", assert =>
+            {
+                DatesEqual(assert, echoedWrappedDateTime.Value, wrappedDateTime.Value);
+            });
+
+            ////short int16 = 5;
+            ////ushort uint16 = 10;
+            ////int int32 = 20;
+            ////uint uint32 = 30;
+            ////long int64 = 35;
+            ////ulong uint64 = 40;
+            ////byte nByte = 45;
+            ////sbyte sByte = 50;
+            ////float Float = 2.4f;
+            ////double Double = 2.0;
+            ////decimal Decimal = 2.3454m;
+
+            ////var numericResults = await server.NumericPrimitives
+            ////(
+            ////   int16,
+            ////   uint16,
+            ////   int32,
+            ////   uint32,
+            ////   int64,
+            ////   uint64,
+            ////   nByte,
+            ////   sByte,
+            ////   Float,
+            ////   Double,
+            ////   Decimal
+            ////);
 
 
-            //QUnit.Test("IService.NumericPrimitives()", assert =>
-            //{
-            //    assert.Equal(numericResults.Length, 11);
-            //    assert.Equal(numericResults[0].As<short>() == int16, true);
-            //    assert.Equal(numericResults[1].As<ushort>() == uint16, true);
-            //    assert.Equal(numericResults[2].As<int>() == int32, true);
-            //    assert.Equal(numericResults[3].As<uint>() == uint32, true);
-            //    assert.Equal(numericResults[4].As<long>() == int64, true);
-            //    assert.Equal(numericResults[5].As<ulong>() == uint64, true);
-            //    assert.Equal(numericResults[6].As<byte>() == nByte, true);
-            //    assert.Equal(numericResults[7].As<sbyte>() == sByte, true);
-            //    assert.Equal(numericResults[8].As<float>() == Float, true);
-            //    assert.Equal(numericResults[9].As<double>() == Double, true);
-            //    assert.Equal(numericResults[10].As<decimal>() == Decimal, true);
-            //});
+            ////QUnit.Test("IService.NumericPrimitives()", assert =>
+            ////{
+            ////    assert.Equal(numericResults.Length, 11);
+            ////    assert.Equal(numericResults[0].As<short>() == int16, true);
+            ////    assert.Equal(numericResults[1].As<ushort>() == uint16, true);
+            ////    assert.Equal(numericResults[2].As<int>() == int32, true);
+            ////    assert.Equal(numericResults[3].As<uint>() == uint32, true);
+            ////    assert.Equal(numericResults[4].As<long>() == int64, true);
+            ////    assert.Equal(numericResults[5].As<ulong>() == uint64, true);
+            ////    assert.Equal(numericResults[6].As<byte>() == nByte, true);
+            ////    assert.Equal(numericResults[7].As<sbyte>() == sByte, true);
+            ////    assert.Equal(numericResults[8].As<float>() == Float, true);
+            ////    assert.Equal(numericResults[9].As<double>() == Double, true);
+            ////    assert.Equal(numericResults[10].As<decimal>() == Decimal, true);
+            ////});
 
             int[] arrayOfInts = { 1, 2, 3 };
             var resultArrayOfInts = await Server.ArrayOfInts(arrayOfInts);
             QUnit.Test("IService.ArrayofInts()", assert =>
             {
-                for(var i = 0; i < arrayOfInts.Length; i++)
+                for (var i = 0; i < arrayOfInts.Length; i++)
                 {
                     assert.Equal(arrayOfInts[i], resultArrayOfInts[i]);
                 }
@@ -164,7 +177,7 @@ namespace Cable.Nancy.ClientTests
                 assert.Equal(result.Hour == (DateTime.Now.AddHours(5).Hour), true);
             });
 
-            var resultSumOfMatrixOfInt = await Server.SumOfMatrixOfInt(new int[][] 
+            var resultSumOfMatrixOfInt = await Server.SumOfMatrixOfInt(new int[][]
             {
                 new int[] { 1, 2, 3 },
                 new int[] { 4, 5, 6 },
@@ -190,10 +203,10 @@ namespace Cable.Nancy.ClientTests
 
             var multipleMatrixElementCount = await Server.MatrixMultipleArgs(matrix, stringMatrix);
 
-            QUnit.Test("IService.MatrixMultipleArgs()",  assert =>
-            {
-                assert.Equal(multipleMatrixElementCount, 12);
-            });
+            QUnit.Test("IService.MatrixMultipleArgs()", assert =>
+           {
+               assert.Equal(multipleMatrixElementCount, 12);
+           });
 
 
             var longMatrix = new long[][]
@@ -275,7 +288,7 @@ namespace Cable.Nancy.ClientTests
                 }
             });
 
-            QUnit.Test("IService.GenericSimpleNested()", assert => 
+            QUnit.Test("IService.GenericSimpleNested()", assert =>
             {
                 assert.Equal(simpleGeneric.Int, 10);
                 assert.Equal(simpleGeneric.String, "MyStr");
@@ -295,7 +308,7 @@ namespace Cable.Nancy.ClientTests
                 assert.Equal(genericPerson.Value.Money == 22.399m, true);
                 DatesEqual(assert, date, genericPerson.Value.DateOfBirth);
                 assert.Equal(genericPerson.Value.IsMarried, false);
-                
+
             });
 
             var genericFstSnd = new DoubleGeneric<int, string>

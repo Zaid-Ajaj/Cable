@@ -74,14 +74,12 @@ namespace Cable.Bridge
                         if (json["$exception"].As<bool>())
                         {
                             tcs.SetException(new Exception(json["$exceptionData"]["Message"].As<string>()));
-                            return;
                         }
                         else
                         {
                             var result = Json.Deserialize<object>(xmlHttp.ResponseText);
                             tcs.SetResult(result);
                         }
-
                     }
                     else
                     {
@@ -103,6 +101,13 @@ namespace Cable.Bridge
 
         public static Func<string, string, string> UrlMapper = (serviceName, methodName) => $"/{serviceName}/{methodName}";
 
+        public static Action<string> Logger = x => Script.Call("console.log", x);
+
+        private static bool IsTask(Type t)
+        {
+            return t.FullName == "System.Threading.Tasks.Task`1";
+        }
+
         public static T Resolve<T>()
         {
             var serviceType = typeof(T);
@@ -123,11 +128,15 @@ namespace Cable.Bridge
             foreach (var method in methods)
             {
                 var methodName = method.Name;
-
-                if (method.ReturnType == typeof(Task))
+                var instanceMethodName = $"{serviceFullName}${Capitalized(methodName)}";
+                if (IsTask(method.ReturnType))
                 {
-                    service[$"{serviceFullName}${Capitalized(methodName)}"] = Lambda(async () =>
+                    service[instanceMethodName] = Lambda(async () =>
                     {
+                        Logger($"Invoking Async function: {Capitalized(methodName)}");
+                        Logger(method.Name);
+                        Logger(method.ReturnType.Name);
+                        Logger(method.ReturnType.FullName);
                         var parameters = Script.Write<object[]>("System.Linq.Enumerable.from(arguments).toArray()");
                         var url = UrlMapper(serviceName, Capitalized(methodName));
                         var result = await PostJsonAsync(url, parameters);
@@ -136,8 +145,12 @@ namespace Cable.Bridge
                 }
                 else
                 {
-                    service[$"{serviceFullName}${Capitalized(methodName)}"] = Lambda(() =>
+                    service[instanceMethodName] = Lambda(() =>
                     {
+                        Logger($"Invoking Sync function: {Capitalized(methodName)}");
+                        Logger(method.Name);
+                        Logger(method.ReturnType.Name);
+                        Logger(method.ReturnType.FullName);
                         var parameters = Script.Write<object[]>("System.Linq.Enumerable.from(arguments).toArray()");
                         var url = UrlMapper(serviceName, Capitalized(methodName));
                         var result = PostJsonSync(url, parameters);

@@ -10,6 +10,8 @@ namespace Client
     {
         Task<bool> String(string input);
 
+        Task<WrappedDateTime> EchoWrappedDateTime(WrappedDateTime data);
+
         Task<object[]> StringIntCharDateTime(string arg1, int arg2, char arg3, DateTime date);
 
         Task<object[]> NumericPrimitives
