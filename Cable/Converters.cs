@@ -125,6 +125,26 @@ namespace Cable
             {
                 json.Add(new JProperty("Value", ((long)value).ToString(CultureInfo.InvariantCulture)));
             }
+            else if (value.GetType() == typeof(float))
+            {
+                json.Add(new JProperty("Value", ((float)value).ToString(CultureInfo.InvariantCulture)));
+            }
+            else if (value.GetType() == typeof(byte))
+            {
+                json.Add(new JProperty("Value", ((byte)value).ToString(CultureInfo.InvariantCulture)));
+            }
+            else if (value.GetType() == typeof(uint))
+            {
+                json.Add(new JProperty("Value", ((uint)value).ToString(CultureInfo.InvariantCulture)));
+            }
+            else if (value.GetType() == typeof(ulong))
+            {
+                json.Add(new JProperty("Value", ((ulong)value).ToString(CultureInfo.InvariantCulture)));
+            }
+            else if (value.GetType() == typeof(sbyte))
+            {
+                json.Add(new JProperty("Value", ((sbyte)value).ToString(CultureInfo.InvariantCulture)));
+            }
             else
             {
                 json.Add(new JProperty("Value", value.ToString()));
