@@ -42,32 +42,17 @@ namespace Cable.Bridge.Tests
             QUnit.Test("Nested object is encoded correctly", assert =>
             {
                 var encoded = Converters.EncodeObject(sample);
-                assert.Equal(encoded["IsPrimitive"], false);
-                assert.Equal(encoded["IsArray"], false);
-                assert.Equal(encoded["IsNumeric"], false);
                 assert.Equal(encoded["Type"], "Cable.Bridge.Tests.NestedObjectTests+WrappedInt");
                 assert.Equal(encoded["Value"]["Id"] == null, false);
-                assert.Equal(encoded["Value"]["Id"]["IsPrimitive"], true);
-                assert.Equal(encoded["Value"]["Id"]["IsArray"], false);
-                assert.Equal(encoded["Value"]["Id"]["IsNumeric"], true);
                 assert.Equal(encoded["Value"]["Id"]["Type"], "Int32");
                 assert.Equal(encoded["Value"]["Id"]["Value"], "5");
                 assert.Equal(encoded["Value"]["Name"] == null, false);
-                assert.Equal(encoded["Value"]["Name"]["IsPrimitive"], true);
-                assert.Equal(encoded["Value"]["Name"]["IsArray"], false);
-                assert.Equal(encoded["Value"]["Name"]["IsNumeric"], false);
                 assert.Equal(encoded["Value"]["Name"]["Type"], "String");
                 assert.Equal(encoded["Value"]["Name"]["Value"], "Zaid");
                 assert.Equal(encoded["Value"]["HasValue"] == null, false);
-                assert.Equal(encoded["Value"]["HasValue"]["IsPrimitive"], true);
-                assert.Equal(encoded["Value"]["HasValue"]["IsArray"], false);
-                assert.Equal(encoded["Value"]["HasValue"]["IsNumeric"], false);
                 assert.Equal(encoded["Value"]["HasValue"]["Type"], "Boolean");
                 assert.Equal(encoded["Value"]["HasValue"]["Value"], true);
                 assert.Equal(encoded["Value"]["Large"] == null, false);
-                assert.Equal(encoded["Value"]["Large"]["IsPrimitive"], true);
-                assert.Equal(encoded["Value"]["Large"]["IsArray"], false);
-                assert.Equal(encoded["Value"]["Large"]["IsNumeric"], true);
                 assert.Equal(encoded["Value"]["Large"]["Type"], "Int64");
                 assert.Equal(encoded["Value"]["Large"]["Value"], "238472746327434243");
             });
@@ -76,7 +61,7 @@ namespace Cable.Bridge.Tests
             {
                 var serialized = Json.Serialize(sample);
 
-                var deserialized = Json.Deserialize<WrappedInt>(serialized);
+                var deserialized = Json.Deserialize(serialized, typeof(WrappedInt)).As<WrappedInt>();
 
                 assert.Equal(sample.Id, deserialized.Id);
                 assert.Equal(sample.Name, deserialized.Name);

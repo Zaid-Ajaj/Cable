@@ -16,7 +16,7 @@ namespace Cable.Bridge.Tests
 
                 var serialized = Json.Serialize(timeSpan);
 
-                var deserialized = Json.Deserialize<TimeSpan>(serialized);
+                var deserialized = Json.Deserialize(serialized, typeof(TimeSpan)).As<TimeSpan>();
 
                 assert.Equal(true, timeSpan.Ticks == deserialized.Ticks);
 

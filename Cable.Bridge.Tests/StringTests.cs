@@ -1,5 +1,6 @@
 ﻿using Bridge;
 using Bridge.QUnit;
+using System;
 
 namespace Cable.Bridge.Tests
 {
@@ -15,7 +16,7 @@ namespace Cable.Bridge.Tests
             {
                 var serialized = Json.Serialize(sample);
 
-                var deserialized = Json.Deserialize<string>(serialized);
+                var deserialized = Json.Deserialize(serialized, typeof(string)).As<string>();
 
                 assert.Equal(deserialized, sample);
             });

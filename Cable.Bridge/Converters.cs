@@ -176,10 +176,7 @@ namespace Cable.Bridge
             else if (IsArray(value))
             {
                 var result = Script.Write<object>("{}");
-                result["IsPrimitive"] = true;
-                result["IsArray"] = true;
-                result["IsNumeric"] = false;
-                
+
                 if (type.Name == "Array")
                 {
                     result["Type"] = "Array";

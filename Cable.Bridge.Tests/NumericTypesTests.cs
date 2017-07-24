@@ -17,31 +17,22 @@ namespace Cable.Bridge.Tests
                 assert.Equal(sample.GetType().Name, "UInt16");
                 var encoded = Converters.EncodeObject(sample);
 
-                //@ console.log(encoded);
-
-                assert.Equal(encoded["IsPrimitive"].As<bool>(), true);
-                assert.Equal(encoded["IsArray"].As<bool>(), false);
-                assert.Equal(encoded["IsNumeric"].As<bool>(), true);
                 assert.Equal(encoded["Type"].As<string>(), "UInt16");
                 assert.Equal(encoded["Value"].As<string>(), "10");
 
                 var serialized = Json.Serialize(sample);
-                var deserialized = Json.Deserialize<ushort>(serialized);
+                var deserialized = Json.Deserialize(serialized, typeof(ushort)).As<ushort>();
                 assert.Equal(sample == deserialized, true);
             });
 
             QUnit.Test("UInt32 is converted correctly", assert =>
             {
                 uint sample = 10;
-
                 var encoded = Converters.EncodeObject(sample);
-                assert.Equal(encoded["IsPrimitive"].As<bool>(), true);
-                assert.Equal(encoded["IsArray"].As<bool>(), false);
-                assert.Equal(encoded["IsNumeric"].As<bool>(), true);
                 assert.Equal(encoded["Type"].As<string>(), "UInt32");
                 assert.Equal(encoded["Value"].As<string>(), "10");
                 var serialized = Json.Serialize(sample);
-                var deserialized = Json.Deserialize<uint>(serialized);
+                var deserialized = Json.Deserialize(serialized, typeof(uint)).As<uint>();
                 assert.Equal(sample == deserialized, true);
             });
 
@@ -49,13 +40,10 @@ namespace Cable.Bridge.Tests
             {
                 ulong sample = 10;
                 var encoded = Converters.EncodeObject(sample);
-                assert.Equal(encoded["IsPrimitive"].As<bool>(), true);
-                assert.Equal(encoded["IsArray"].As<bool>(), false);
-                assert.Equal(encoded["IsNumeric"].As<bool>(), true);
                 assert.Equal(encoded["Type"].As<string>(), "UInt64");
                 assert.Equal(encoded["Value"].As<string>(), "10");
                 var serialized = Json.Serialize(sample);
-                var deserialized = Json.Deserialize<ulong>(serialized);
+                var deserialized = Json.Deserialize(serialized, typeof(ulong)).As<ulong>();
                 assert.Equal(sample == deserialized, true);
             });
 
@@ -63,13 +51,10 @@ namespace Cable.Bridge.Tests
             {
                 short sample = 2;
                 var encoded = Converters.EncodeObject(sample);
-                assert.Equal(encoded["IsPrimitive"].As<bool>(), true);
-                assert.Equal(encoded["IsArray"].As<bool>(), false);
-                assert.Equal(encoded["IsNumeric"].As<bool>(), true);
                 assert.Equal(encoded["Type"].As<string>(), "Int16");
                 assert.Equal(encoded["Value"].As<string>(), "2");
                 var serialized = Json.Serialize(sample);
-                var deserialized = Json.Deserialize<short>(serialized);
+                var deserialized = Json.Deserialize(serialized, typeof(short)).As<short>();
                 assert.Equal(sample, deserialized);
             });
 
@@ -77,13 +62,10 @@ namespace Cable.Bridge.Tests
             {
                 var sample = 7;
                 var encoded = Converters.EncodeObject(sample);
-                assert.Equal(encoded["IsPrimitive"].As<bool>(), true);
-                assert.Equal(encoded["IsArray"].As<bool>(), false);
-                assert.Equal(encoded["IsNumeric"].As<bool>(), true);
                 assert.Equal(encoded["Type"].As<string>(), "Int32");
                 assert.Equal(encoded["Value"].As<string>(), "7");
                 var serialized = Json.Serialize(sample);
-                var deserialized = Json.Deserialize<int>(serialized);
+                var deserialized = Json.Deserialize(serialized, typeof(int)).As<int>();
                 assert.Equal(sample, deserialized);
             });
 
@@ -92,14 +74,11 @@ namespace Cable.Bridge.Tests
                 var sample = 10L;
 
                 var encoded = Converters.EncodeObject(sample);
-                assert.Equal(encoded["IsPrimitive"].As<bool>(), true);
-                assert.Equal(encoded["IsArray"].As<bool>(), false);
-                assert.Equal(encoded["IsNumeric"].As<bool>(), true);
                 assert.Equal(encoded["Type"].As<string>(), "Int64");
                 assert.Equal(encoded["Value"].As<string>(), "10");
 
                 var serialized = Json.Serialize(sample);
-                var deserialized = Json.Deserialize<long>(serialized);
+                var deserialized = Json.Deserialize(serialized, typeof(long)).As<long>();
                 assert.Equal(sample == deserialized, true);
             });
 
@@ -108,14 +87,11 @@ namespace Cable.Bridge.Tests
                 var sample = 2.521;
 
                 var encoded = Converters.EncodeObject(sample);
-                assert.Equal(encoded["IsPrimitive"].As<bool>(), true);
-                assert.Equal(encoded["IsArray"].As<bool>(), false);
-                assert.Equal(encoded["IsNumeric"].As<bool>(), true);
                 assert.Equal(encoded["Type"].As<string>(), "Double");
                 assert.Equal(encoded["Value"].As<string>(), "2.521");
 
                 var serialized = Json.Serialize(sample);
-                var deserialized = Json.Deserialize<double>(serialized);
+                var deserialized = Json.Deserialize(serialized, typeof(double)).As<double>();
                 assert.Equal(sample, deserialized);
             });
 
@@ -123,14 +99,11 @@ namespace Cable.Bridge.Tests
             {
                 var sample = 2.234m;
                 var encoded = Converters.EncodeObject(sample);
-                assert.Equal(encoded["IsPrimitive"].As<bool>(), true);
-                assert.Equal(encoded["IsArray"].As<bool>(), false);
-                assert.Equal(encoded["IsNumeric"].As<bool>(), true);
                 assert.Equal(encoded["Type"].As<string>(), "Decimal");
                 assert.Equal(encoded["Value"].As<string>(), "2.234");
 
                 var serialized = Json.Serialize(sample);
-                var deserialized = Json.Deserialize<decimal>(serialized);
+                var deserialized = Json.Deserialize(serialized, typeof(decimal)).As<decimal>();
                 assert.Equal(sample == deserialized, true);
             });
 
@@ -138,13 +111,10 @@ namespace Cable.Bridge.Tests
             {
                 byte sample = 200;
                 var encoded = Converters.EncodeObject(sample);
-                assert.Equal(encoded["IsPrimitive"].As<bool>(), true);
-                assert.Equal(encoded["IsArray"].As<bool>(), false);
-                assert.Equal(encoded["IsNumeric"].As<bool>(), true);
                 assert.Equal(encoded["Type"].As<string>(), "Byte");
                 assert.Equal(encoded["Value"].As<string>(), "200");
                 var serialized = Json.Serialize(sample);
-                var deserialized = Json.Deserialize<byte>(serialized);
+                var deserialized = Json.Deserialize(serialized, typeof(byte)).As<byte>();
                 assert.Equal(sample, deserialized);
             });
         }

@@ -12,13 +12,6 @@ namespace Cable.Bridge.Tests
             Task<int> Add(int x, int y);
         }
 
-        [Reflectable]
-        interface IReflectable
-        {
-
-        }
-
-        [Reflectable]
         interface IService
         {
             Task<int> Add(int x, int y);
