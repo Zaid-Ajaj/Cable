@@ -73,29 +73,14 @@ namespace Cable.Bridge
         public static object EncodeDateTime(DateTime time)
         {
             var result = Script.Write<object>("{}");
-            result["IsPrimitive"] = true;
-            result["IsArray"] = false;
             result["Type"] = "DateTime";
-            result["IsNumeric"] = false;
-
-            var value = Script.Write<object>("{}");
-            value["Year"] = time.Year;
-            value["Month"] = time.Month;
-            value["Day"] = time.Day;
-            value["Hour"] = time.Hour;
-            value["Minute"] = time.Minute;
-            value["Second"] = time.Second;
-            value["Millisecond"] = time.Millisecond;
-            result["Value"] = EliminateBoxing(value);
+            result["Value"] = time.ToString("dd/MM/yyyy HH:mm:ss.fff", CultureInfo.InvariantCulture);
             return EliminateBoxing(result);
         }
 
         public static object EncodeNumeric<T>(T value, string typeName = "")
         {
             var result = Script.Write<object>("{}");
-            result["IsPrimitive"] = true;
-            result["IsArray"] = false;
-            result["IsNumeric"] = true;
             result["Type"] = string.IsNullOrEmpty(typeName) ? value.GetType().Name : typeName;
             result["Value"] = value.ToString();
             return EliminateBoxing(result);
@@ -104,9 +89,6 @@ namespace Cable.Bridge
         public static object EncodeChar<T>(T value)
         {
             var result = Script.Write<object>("{}");
-            result["IsPrimitive"] = true;
-            result["IsArray"] = false;
-            result["IsNumeric"] = false;
             result["Type"] = "Char";
             result["Value"] = value;
             return EliminateBoxing(result);
@@ -115,9 +97,6 @@ namespace Cable.Bridge
         public static object EncodeString(object value)
         {
             var result = Script.Write<object>("{}");
-            result["IsPrimitive"] = true;
-            result["IsArray"] = false;
-            result["IsNumeric"] = false;
             result["Type"] = "String";
             result["Value"] = value;
             return EliminateBoxing(result);
@@ -126,9 +105,6 @@ namespace Cable.Bridge
         public static object EncodeBoolean(object value)
         {
             var result = Script.Write<object>("{}");
-            result["IsPrimitive"] = true;
-            result["IsArray"] = false;
-            result["IsNumeric"] = false;
             result["Type"] = "Boolean";
             result["Value"] = value;
             return EliminateBoxing(result);
@@ -137,9 +113,6 @@ namespace Cable.Bridge
         public static object EncodeTimeSpan(object timeSpan)
         {
             var result = Script.Write<object>("{}");
-            result["IsPrimitive"] = true;
-            result["IsArray"] = false;
-            result["IsNumeric"] = false;
             result["Type"] = "TimeSpan";
             result["Value"] = timeSpan.As<TimeSpan>().Ticks.ToString();
             return EliminateBoxing(result);
@@ -278,9 +251,6 @@ namespace Cable.Bridge
             {
                 // then it is an object here
                 var result = new object();
-                result["IsPrimitive"] = false;
-                result["IsArray"] = false;
-                result["IsNumeric"] = false;
                 result["FromBridge"] = true;
                 result["Type"] = GetTypeof(value).FullName;
 
@@ -303,7 +273,7 @@ namespace Cable.Bridge
             return Script.Write<double>("parseFloat(input, 10)");
         }
 
-        public static object DecodeObject<T>(object json)
+        public static object DecodeObject(object json, Type jsonType)
         {
             var type = json["Type"].As<string>();
 
@@ -311,90 +281,68 @@ namespace Cable.Bridge
             {
                 return null;
             }
-
-            if (json["IsPrimitive"].As<bool>() && !json["IsArray"].As<bool>())
+            else if (type == "DateTime")
             {
-                if (type == "DateTime")
-                {
-                    var year = json["Value"]["Year"].As<int>();
-                    var month = json["Value"]["Month"].As<int>();
-                    var day = json["Value"]["Day"].As<int>();
-                    var hour = json["Value"]["Hour"].As<int>();
-                    var minute = json["Value"]["Minute"].As<int>();
-                    var second = json["Value"]["Second"].As<int>();
-                    var milliseconds = json["Value"]["Millisecond"].As<int>();
-                    var kind = json["Value"]["Kind"].As<string>();
-                    // TODO: use DateTime.Kind in the constructor when Bridge allows it
-                    var result = new DateTime(year, month, day, hour, minute, second, milliseconds);
-                    return EliminateBoxing(result as object);
-                }
-
-                if (type == "String") return json["Value"];
-
-                if (type == "Char") return (char)(json["Value"].As<int>());
-
-                if (type == "TimeSpan") return TimeSpan.FromTicks(long.Parse(json["Value"].As<string>()));
-
-                if (type == "UInt16") return ushort.Parse(json["Value"].As<string>());
-
-                if (type == "UInt32") return uint.Parse(json["Value"].As<string>());
-
-                if (type == "UInt64") return ulong.Parse(json["Value"].As<string>());
-
-                if (type == "Int16") return short.Parse(json["Value"].As<string>());
-
-                if (type == "Int32") return int.Parse(json["Value"].As<string>());
-
-                if (type == "Int64") return long.Parse(json["Value"].As<string>());
-
-                if (type == "Double") return ParseDouble(json["Value"].As<string>());
-
-                if (type == "Decimal") return decimal.Parse(json["Value"].As<string>());
-
-                if (type == "Byte") return byte.Parse(json["Value"].As<string>());
-
-                if (type == "Boolean") return json["Value"].As<bool>();
-
-                if (type == "Enum")
-                {
-                    var enumType = Type.GetType(json["EnumType"].As<string>());
-                    var enumValue = Enum.Parse(enumType, json["Value"].As<string>());
-                }
-
-                return null;
-
+                var format = "dd/MM/yyyy HH:mm:ss.fff";
+                var result = DateTime.ParseExact(json["Value"].As<string>(), format, CultureInfo.InvariantCulture);
+                return EliminateBoxing(result as object);
             }
-            else if (json["IsArray"].As<bool>())
+
+            else if (type == "String") return json["Value"];
+
+            else if(type == "Char") return (char)(json["Value"].As<int>());
+
+            else if(type == "TimeSpan") return TimeSpan.FromTicks(long.Parse(json["Value"].As<string>()));
+
+            else if(type == "UInt16") return ushort.Parse(json["Value"].As<string>());
+
+            else if(type == "UInt32") return uint.Parse(json["Value"].As<string>());
+
+            else if(type == "UInt64") return ulong.Parse(json["Value"].As<string>());
+
+            else if(type == "Int16") return short.Parse(json["Value"].As<string>());
+
+            else if(type == "Int32") return int.Parse(json["Value"].As<string>());
+
+            else if(type == "Int64") return long.Parse(json["Value"].As<string>());
+
+            else if(type == "Double") return ParseDouble(json["Value"].As<string>());
+
+            else if(type == "Decimal") return decimal.Parse(json["Value"].As<string>());
+
+            else if(type == "Byte") return byte.Parse(json["Value"].As<string>());
+
+            else if(type == "Boolean") return json["Value"].As<bool>();
+
+            else if(type == "Enum")
             {
-                if (json["Type"].As<string>() == "Array")
-                {
-                    var encodedItems = json["Value"].As<object[]>();
-                    var arr = new object[encodedItems.Length];
-
-                    for (int i = 0; i < encodedItems.Length; i++)
-                    {
-                        arr[i] = DecodeObject<object>(encodedItems[i]);
-                    }
-
-                    return arr;
-                }
-
-                if (json["Type"].As<string>() == "List")
-                {
-                    var encodedItems = json["Value"].As<object[]>();
-                    var list = new List<object>();
-
-                    for (int i = 0; i < encodedItems.Length; i++)
-                    {
-                        list.Add(DecodeObject<object>(encodedItems[i]));
-                    }
-
-                    return list;
-                }
-
-                return null;
+                var enumType = Type.GetType(json["EnumType"].As<string>());
+                var enumValue = Enum.Parse(enumType, json["Value"].As<string>());
             }
-            else
+            if (json["Type"].As<string>() == "Array")
+            {
+                var encodedItems = json["Value"].As<object[]>();
+                var arr = new object[encodedItems.Length];
+
+                for (int i = 0; i < encodedItems.Length; i++)
+                {
+                    arr[i] = DecodeObject(encodedItems[i], typeof(object));
+                }
+
+                return arr;
+            }
+            else if (json["Type"].As<string>() == "List")
+            {
+                var encodedItems = json["Value"].As<object[]>();
+                var list = new List<object>();
+                for (int i = 0; i < encodedItems.Length; i++)
+                {
+                    list.Add(DecodeObject(encodedItems[i], typeof(object)));
+                }
+
+                return list;
+            }
+            else if (Script.IsDefined(json["FromBridge"]))
             {
                 object instance = null;
 
@@ -415,12 +363,16 @@ namespace Cable.Bridge
                 for (int i = 0; i < propNames.Length; i++)
                 {
                     var propValue = json["Value"][propNames[i]];
-                    var decoded = DecodeObject<object>(propValue);
+                    var decoded = DecodeObject(propValue, typeof(object));
                     var setPropName = propNames[i];
                     instance[setPropName] = decoded;
                 }
 
                 return instance;
+            }
+            else
+            {
+                return null;
             }
         }
 

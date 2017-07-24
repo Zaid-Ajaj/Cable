@@ -36,7 +36,7 @@ namespace Cable.Bridge
             var xmlHttp = new XMLHttpRequest();
             xmlHttp.Open("POST", url, false);
 
-            var serialized = JsonConvert.SerializeObject(data, Formatting.Indented, new JsonSerializerSettings {  });
+            var serialized = Json.Serialize(data);
 
             xmlHttp.Send(serialized);
 
@@ -50,7 +50,7 @@ namespace Cable.Bridge
                 }
                 else
                 {
-                    var result = JsonConvert.DeserializeObject(xmlHttp.ResponseText, returnType);
+                    var result = Json.Deserialize(xmlHttp.ResponseText, returnType);
                     return result;
                 }
             }
@@ -85,7 +85,7 @@ namespace Cable.Bridge
                         }
                         else
                         {
-                            var result = JsonConvert.DeserializeObject(xmlHttp.ResponseText, returnType);
+                            var result = Json.Deserialize(xmlHttp.ResponseText, returnType);
                             tcs.SetResult(result);
                         }
                     }
@@ -97,7 +97,7 @@ namespace Cable.Bridge
 
             };
 
-            var serialized = JsonConvert.SerializeObject(parameters);
+            var serialized = Json.Serialize(parameters);
             xmlHttp.Send(serialized);
             return await tcs.Task;
         }
@@ -143,6 +143,7 @@ namespace Cable.Bridge
                 if (IsTask(method.ReturnType))
                 {
                     var taskArgs = method.ReturnType.GetGenericArguments();
+                    // var taskType = taskArgs[0];
                     service[instanceMethodName] = Lambda(async () =>
                     {
                         var parameters = Script.Write<object[]>("System.Linq.Enumerable.from(arguments).toArray()");

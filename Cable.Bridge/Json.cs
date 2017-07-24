@@ -17,10 +17,10 @@ namespace Cable.Bridge
             return JSON.Stringify(encodedWithoutBoxing);
         }
 
-        public static T Deserialize<T>(string json)
+        public static object Deserialize(string json, Type type)
         {
             var parsed = JSON.Parse(json);
-            var decoded = Converters.DecodeObject<T>(parsed).As<T>();
+            var decoded = Converters.DecodeObject(parsed, type);
             return decoded;
         }
     }

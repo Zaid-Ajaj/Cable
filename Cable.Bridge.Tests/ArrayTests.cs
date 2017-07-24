@@ -47,7 +47,7 @@ namespace Cable.Bridge.Tests
             {
                 var ints = new int[] { 1, 2, 3 };
                 var serialized = Json.Serialize(ints);
-                var deserialized = Json.Deserialize<int[]>(serialized);
+                var deserialized = Json.Deserialize(serialized, typeof(int[]));
                 assert.DeepEqual(deserialized, ints);
             });
 
@@ -56,7 +56,7 @@ namespace Cable.Bridge.Tests
             {
                 var strings = new string[] { "one", "two" };
                 var serialized = Json.Serialize(strings);
-                var deserialized = Json.Deserialize<string[]>(serialized);
+                var deserialized = Json.Deserialize(serialized, typeof(string[]));
                 assert.DeepEqual(deserialized, strings);
             });
 
@@ -64,7 +64,7 @@ namespace Cable.Bridge.Tests
             {
                 var longs = new long[] { 10L, 20L, 30L };
                 var serialized = Json.Serialize(longs);
-                var deserialized = Json.Deserialize<long[]>(serialized);
+                var deserialized = Json.Deserialize(serialized, typeof(long[])).As<long[]>();
 
                 assert.Equal(longs[0] == deserialized[0], true);
                 assert.Equal(longs[1] == deserialized[1], true);
@@ -76,7 +76,7 @@ namespace Cable.Bridge.Tests
             {
                 var doubles = new double[] { 2.5, 2.56, 2.567 };
                 var serialized = Json.Serialize(doubles);
-                var deserialized = Json.Deserialize<double[]>(serialized);
+                var deserialized = Json.Deserialize(serialized, typeof(double[])).As<double[]>();
 
                 assert.Equal(doubles[0] == deserialized[0], true);
                 assert.Equal(doubles[1] == deserialized[1], true);
@@ -88,7 +88,7 @@ namespace Cable.Bridge.Tests
             {
                 var decimals = new decimal[] { 2.5m, 2.56m, 2.567m };
                 var serialized = Json.Serialize(decimals);
-                var deserialized = Json.Deserialize<decimal[]>(serialized);
+                var deserialized = Json.Deserialize(serialized, typeof(decimal[])).As<decimal[]>();
 
                 assert.Equal(decimals[0] == deserialized[0], true);
                 assert.Equal(decimals[1] == deserialized[1], true);
@@ -100,7 +100,7 @@ namespace Cable.Bridge.Tests
             {
                 var dates = new DateTime[] { DateTime.Now, DateTime.UtcNow, new DateTime(2016, 12, 10, 20, 30, 0, 15) };
                 var serialized = Json.Serialize(dates);
-                var deserialized = Json.Deserialize<DateTime[]>(serialized);
+                var deserialized = Json.Deserialize(serialized, typeof(DateTime[])).As< DateTime[]>();
                 assert.DeepEqual(deserialized, dates);
             });
         }

@@ -21,16 +21,10 @@ namespace Cable.Bridge.Tests
             QUnit.Test("IEnumerable with yield return is converted corretly to array", assert =>
             {
                 assert.Equal(encoded == null, false);
-                assert.Equal(encoded["IsPrimitive"], true);
-                assert.Equal(encoded["IsArray"], true);
-                assert.Equal(encoded["IsNumeric"], false);
                 assert.Equal(encoded["Type"], "Array");
                 assert.Equal(encoded["Value"]["length"], 1);
 
                 var number = Script.Write<object>("encoded.Value[0]");
-                assert.Equal(number["IsPrimitive"], true);
-                assert.Equal(number["IsNumeric"], true);
-                assert.Equal(number["IsArray"], false);
                 assert.Equal(number["Type"], "Int32");
                 assert.Equal(number["Value"], 10);
             });
