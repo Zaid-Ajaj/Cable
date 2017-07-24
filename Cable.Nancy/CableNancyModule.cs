@@ -23,19 +23,6 @@ namespace Cable.Nancy
         public string ReturnType { get; set; }
     }
 
-    public class JsonHelper
-    {
-        public static T DefaultDeserialize<T>(string json)
-        {
-            return JsonConvert.DeserializeObject<T>(json);
-        }
-
-        public static string DefaultSerialize(object obj)
-        {
-            return JsonConvert.SerializeObject(obj);
-        }
-    }
-
     public class CableRouteSchema
     {
         public string ServiceInterface { get; set; }
@@ -117,12 +104,6 @@ namespace Cable.Nancy
         {
             var baseType = typeof(TBase);
 
-            //if (Cache.ContainsKey(baseType.FullName))
-            //{
-            //    return Cache[baseType.FullName];
-            //}
-            
-
             var type = implementation.GetType();
 
             var baseTypeName = TypeName(baseType);
@@ -146,43 +127,9 @@ namespace Cable.Nancy
                 if (method.ContainsGenericParameters) throw new ArgumentException($"Method {method.Name} contains generic type parameters, this is not supported.");
                 RegisterRoute<TBase>(implementation, method, module, routeSchema);
             }
-
-            //Cache.Add(baseType.FullName, routeSchema);
-
             return routeSchema;
         }
 
-
-        public static JsonSerializer CreateCableSerializer()
-        {
-            var settings = new JsonSerializerSettings
-            {
-                Converters = new JsonConverter[]
-                {
-                    new CableConverter()
-                }
-            };
-
-            return JsonSerializer.Create(settings);
-        }
-
-        static string ToCamelCase(string input)
-        {
-            if (!string.IsNullOrEmpty(input))
-            {
-                var output = "";
-                output += char.ToLower(input[0]).ToString();
-
-                for (int i = 1; i < input.Length; i++)
-                {
-                    output += input[i];
-                }
-
-                return output;
-            }
-
-            return "";
-        }
 
         static void RegisterRoute<TBase>(object implementation, MethodInfo method, NancyModule module, CableRouteSchema routeSchema)
         {

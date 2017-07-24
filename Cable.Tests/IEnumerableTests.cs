@@ -1,18 +1,13 @@
 ﻿using Cable.Tests.Models;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
+using NUnit.Framework;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Cable.Tests
 {
-    [TestClass]
+    [TestFixture]
     public class IEnumerableTests
     {
-        [TestMethod]
+        [Test]
         public void IEnumerableIsConvertedCorrectly()
         {
             var sample = new WithIEnumerable { Numbers = Enumerable.Range(1, 10) };
@@ -28,7 +23,7 @@ namespace Cable.Tests
             Assert.AreEqual(isValid, true);
         }
 
-        [TestMethod]
+        [Test]
         public void ComplexTypeWithNullIsConvertedCorrectly()
         {
             var sample = new WithIEnumerable { Numbers = null };

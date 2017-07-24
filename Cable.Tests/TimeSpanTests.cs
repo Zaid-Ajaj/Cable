@@ -1,16 +1,12 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using NUnit.Framework;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Cable.Tests
 {
-    [TestClass]
+    [TestFixture]
     public class TimeSpanTests
     {
-        [TestMethod]
+        [Test]
         public void TimeSpanIsConvertedCorrectly()
         {
             var span = TimeSpan.FromDays(1000);

@@ -1,21 +1,17 @@
 ﻿using Cable.Tests.Models;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Cable.Tests
 {
-    [TestClass]
+    [TestFixture]
     public class NonPrimitiveTests
     {
         static NonPrimitive Sample() => new NonPrimitive { Id = 5 };
 
-        [TestMethod]
+        [Test]
         public void TypeInformationIsAddedToNonPrimitiveType()
         {
             var sample = Sample();
@@ -26,7 +22,7 @@ namespace Cable.Tests
         }
 
 
-        [TestMethod]
+        [Test]
         public void NonPrimitiveIsDeserializedToDynamic()
         {
             var sample = Sample();

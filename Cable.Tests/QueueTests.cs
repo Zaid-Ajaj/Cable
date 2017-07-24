@@ -1,5 +1,5 @@
 ﻿using Cable.Tests.Models;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Cable.Tests
 {
-    [TestClass]
+    [TestFixture]
     public class QueueTests
     {
         static WithQueue Sample()
@@ -21,7 +21,7 @@ namespace Cable.Tests
         }
 
 
-        [TestMethod]
+        [Test]
         public void QueueIsConvertedCorrectly()
         {
             var sample = Sample();

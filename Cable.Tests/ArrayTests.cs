@@ -1,15 +1,10 @@
 ﻿using Cable.Tests.Models;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using NUnit.Framework;
 
 namespace Cable.Tests
 {
-    [TestClass]
+    [TestFixture]
     public class ArrayTests
     {
         static WithArray Sample() => new WithArray
@@ -17,7 +12,7 @@ namespace Cable.Tests
             Array = new int[] { 1, 2, 3 }
         };
 
-        [TestMethod]
+        [Test]
         public void ArrayIsConvertedCorrectly()
         {
             var sample = Sample();
@@ -35,7 +30,7 @@ namespace Cable.Tests
         }
 
 
-        [TestMethod]
+        [Test]
         public void BoxedArrayIsConvertedCorrectly()
         {
             var arr = new int[] { 1, 2, 3 };
@@ -50,7 +45,7 @@ namespace Cable.Tests
         }
 
 
-        [TestMethod]
+        [Test]
         public void ArrayOfArrayIsConvertedCorrectly()
         {
             var sample = new int[][]
@@ -72,7 +67,7 @@ namespace Cable.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void ArrayOfObjectsConvertedCorrectly()
         {
             var objs = new object[] { 5L, "hello" };

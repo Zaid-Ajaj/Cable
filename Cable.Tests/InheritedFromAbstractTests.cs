@@ -1,18 +1,14 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using NUnit.Framework;
+
 using Cable.Tests.Models;
 using Newtonsoft.Json;
 
 namespace Cable.Tests
 {
-    [TestClass]
+    [TestFixture]
     public class InheritedFromAbstractTests
     {
-        [TestMethod]
+        [Test]
         public void InheritedFromAbstractIsConvertedCorrectly()
         {
             var sample = new InheritsFromAbstract

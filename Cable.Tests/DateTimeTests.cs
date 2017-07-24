@@ -1,14 +1,14 @@
 ﻿using System;
 using Newtonsoft.Json;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace Cable.Tests
 {
 
-    [TestClass]
+    [TestFixture]
     public class Tests
     {
-        [TestMethod]
+        [Test]
         public void DateTimeIsConvertedCorrectly()
         {
             var now = DateTime.Now;
@@ -27,7 +27,7 @@ namespace Cable.Tests
         }
 
 
-        [TestMethod]
+        [Test]
         public void DateTimeOfKindUTCConvertedCorrectly()
         {
             var now = DateTime.Now.ToUniversalTime();

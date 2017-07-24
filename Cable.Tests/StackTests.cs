@@ -1,15 +1,11 @@
 ﻿using Cable.Tests.Models;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Cable.Tests
 {
-    [TestClass]
+    [TestFixture]
     public class StackTests
     {
         static WithStack Sample()
@@ -21,7 +17,7 @@ namespace Cable.Tests
             return new WithStack { Stack = stack };
         }
 
-        [TestMethod]
+        [Test]
         public void StackIsConvertedCorrectly()
         {
             var sample = Sample();

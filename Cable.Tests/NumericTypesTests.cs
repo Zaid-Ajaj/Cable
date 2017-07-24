@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 
 namespace Cable.Tests
 {
-    [TestClass]
+    [TestFixture]
     public class NumericTypesTests
     {
         private static NumericProps Sample() => new NumericProps
@@ -29,7 +29,7 @@ namespace Cable.Tests
         };
 
 
-        [TestMethod]
+        [Test]
         public void NumberTypesAreConvertedCorrectly()
         {
             var sample = Sample();
@@ -51,7 +51,7 @@ namespace Cable.Tests
             Assert.AreEqual(deserialized.Decimal.GetType(), typeof(decimal));
         }
 
-        [TestMethod]
+        [Test]
         public void NumericValuesAreConvertedCorrectly()
         {
             var sample = Sample();

@@ -1,13 +1,13 @@
 ﻿using Cable.Tests.Models;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using Newtonsoft.Json;
 
 namespace Cable.Tests
 {
-    [TestClass]
+    [TestFixture]
     public class StringWithCharTests
     {
-        [TestMethod]
+        [Test]
         public void StringAndCharAreConvertedCorrectly()
         {
             var sample = new StringWithChar

@@ -1,18 +1,15 @@
 ﻿using Cable.Tests.Models;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
+
 
 namespace Cable.Tests
 {
-    [TestClass]
+    [TestFixture]
     public class GenericClassTests
     {
-        [TestMethod]
+        [Test]
         public void GenericNesteClassIsConvertedCorrectly()
         {
             var sample = new GenericClass<NestedInGeneric<int>>

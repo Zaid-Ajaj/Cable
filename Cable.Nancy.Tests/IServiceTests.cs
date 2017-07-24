@@ -17,7 +17,7 @@ namespace Cable.Nancy.Tests
     {
         static Bootstraper bootstrapper = new Bootstraper();
 
-        static string Args(object[] args)
+        static string Args(params object[] args)
         {
             var serialized = Json.Serialize(args);
             return serialized;
@@ -70,7 +70,7 @@ namespace Cable.Nancy.Tests
             var response = browser.Post("/IService/String", ctx =>
             {
                 ctx.AjaxRequest();
-                ctx.Body(Args(new object[] { "hello" }));
+                ctx.Body(Args("hello"));
             });
 
             Assert.AreEqual(true, FromBody<bool>(response.Body));
@@ -112,7 +112,7 @@ namespace Cable.Nancy.Tests
             var response = browser.Post("/IService/ArrayOfInts", ctx =>
             {
                 ctx.AjaxRequest();
-                ctx.Body(Args(new object[] { ints }));
+                ctx.Body(Args(ints));
             });
 
             var result = FromBody<int[]>(response.Body);
@@ -155,7 +155,7 @@ namespace Cable.Nancy.Tests
             var response = browser.Post("/IService/ArraysAsArguments", ctx =>
             {
                 ctx.AjaxRequest();
-                ctx.Body(Args(new object[] { ints, strings, chars }));
+                ctx.Body(Args(ints, strings, chars));
             });
 
             var result = FromBody<int[]>(response.Body);
@@ -175,7 +175,7 @@ namespace Cable.Nancy.Tests
             var res = browser.Post("/IService/ArrayOfDateTime", ctx =>
             {
                 ctx.AjaxRequest();
-                ctx.Body(Args(new object[] { dates }));
+                ctx.Body(Args(dates));
             });
 
             var result = FromBody<DateTime[]>(res.Body);
@@ -198,7 +198,7 @@ namespace Cable.Nancy.Tests
             var res = browser.Post("/IService/NoArgumentsReturningIntArray", ctx =>
             {
                 ctx.AjaxRequest();
-                ctx.Body(Args(new object[] { }));
+                ctx.Body(Args());
             });
 
             var result = FromBody<int[]>(res.Body);

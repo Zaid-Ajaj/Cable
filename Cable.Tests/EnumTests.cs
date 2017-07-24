@@ -1,12 +1,12 @@
 ﻿using Cable.Tests.Models;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace Cable.Tests
 {
-    [TestClass]
+    [TestFixture]
     public class EnumTests
     {
-        [TestMethod]
+        [Test]
         public void EnumIsConvertedCorrectly()
         {
             var sample = new WithEnum { Choice = Choices.One };
