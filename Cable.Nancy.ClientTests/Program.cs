@@ -45,7 +45,7 @@ namespace Cable.Nancy.ClientTests
             QUnit.Test("IService.String()", assert => assert.Equal(stringResult, true));
 
 
-            var now = new DateTime(2016, 12, 19, 20, 30, 0, 500);
+            var now = new DateTime(2016, 12, 19, 20, 30, 0);
             var objectsResult = await Server.StringIntCharDateTime("hello there", 5, 'a', now);
             QUnit.Test("IService.StringIntCharDateTime()", assert =>
             {
@@ -61,7 +61,7 @@ namespace Cable.Nancy.ClientTests
 
             var wrappedDateTime = new WrappedDateTime
             {
-                Value = new DateTime(2017, 10, 12, 20, 30)
+                Value = new DateTime(2017, 10, 12, 20, 30, 0)
             };
 
             var echoedWrappedDateTime = await Server.EchoWrappedDateTime(wrappedDateTime);
@@ -268,13 +268,11 @@ namespace Cable.Nancy.ClientTests
 
             var sumArray = await Server.IEnumerableSum(new int[] { 1, 2, 3, 4, 5 });
             var sumList = await Server.IEnumerableSum(numList);
-            var sumRange = await Server.IEnumerableSum(Enumerable.Range(1, 5));
 
             QUnit.Test("IService.IEnumerableSum()", assert =>
             {
                 assert.Equal(sumArray, 15);
                 assert.Equal(sumList, 15);
-                assert.Equal(sumRange, 15);
             });
 
             var genericInt = await Server.GenericInt(new Generic<int> { Value = 5 });

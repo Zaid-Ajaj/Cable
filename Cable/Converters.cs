@@ -30,9 +30,6 @@ namespace Cable
         public static JObject Enum(object enumObject)
         {
             var json = new JObject();
-            json.Add(new JProperty("IsPrimitive", true));
-            json.Add(new JProperty("IsArray", false));
-            json.Add(new JProperty("IsNumeric", false));
             json.Add(new JProperty("Type", "Enum"));
             json.Add(new JProperty("EnumType", enumObject.GetType().FullName));
             json.Add(new JProperty("Value", enumObject.ToString()));
@@ -43,30 +40,14 @@ namespace Cable
         public static JObject DateTime(DateTime time)
         {
             var obj = new JObject();
-            obj.Add(new JProperty("IsPrimitive", true));
-            obj.Add(new JProperty("IsArray", false));
-            obj.Add(new JProperty("IsNumeric", false));
             obj.Add(new JProperty("Type", "DateTime"));
-
-            var value = new JObject();
-            value.Add(new JProperty("Year", time.Year));
-            value.Add(new JProperty("Month", time.Month));
-            value.Add(new JProperty("Day", time.Day));
-            value.Add(new JProperty("Hour", time.Hour));
-            value.Add(new JProperty("Minute", time.Minute));
-            value.Add(new JProperty("Second", time.Second));
-            value.Add(new JProperty("Millisecond", time.Millisecond));
-            value.Add(new JProperty("Kind", time.Kind.ToString()));
-            obj.Add(new JProperty("Value", value));
+            obj.Add(new JProperty("Value", time.ToString("dd/MM/yyyy HH:mm:ss.fff", CultureInfo.InvariantCulture)));
             return obj;
         }
 
         public static JObject String(string input)
         {
             var strJson = new JObject();
-            strJson.Add(new JProperty("IsPrimitive", true));
-            strJson.Add(new JProperty("IsArray", false));
-            strJson.Add(new JProperty("IsNumeric", false));
             strJson.Add(new JProperty("Type", "String"));
             strJson.Add(new JProperty("Value", input));
             return strJson;
@@ -75,9 +56,6 @@ namespace Cable
         public static JObject Char(char token)
         {
             var charJson = new JObject();
-            charJson.Add(new JProperty("IsPrimitive", true));
-            charJson.Add(new JProperty("IsArray", false));
-            charJson.Add(new JProperty("IsNumeric", false));
             charJson.Add(new JProperty("Type", "Char"));
             charJson.Add(new JProperty("Value", (int)token));
             return charJson;
@@ -86,13 +64,8 @@ namespace Cable
         public static JObject NullValue()
         {
             var json = new JObject();
-
-            json.Add(new JProperty("IsPrimitive", true));
-            json.Add(new JProperty("IsArray", false));
-            json.Add(new JProperty("IsNumeric", false));
             json.Add(new JProperty("Type", "NullType"));
             json.Add(new JProperty("Value", null));
-
             return json;
         }
         public static JObject Numeric(object value)
@@ -103,10 +76,6 @@ namespace Cable
             }
 
             var json = new JObject();
-
-            json.Add(new JProperty("IsPrimitive", true));
-            json.Add(new JProperty("IsArray", false));
-            json.Add(new JProperty("IsNumeric", true));
             json.Add(new JProperty("Type", value.GetType().Name));
 
             if (value.GetType() == typeof(double))
@@ -155,10 +124,6 @@ namespace Cable
         public static JObject Boolean(bool value)
         {
             var json = new JObject();
-
-            json.Add(new JProperty("IsPrimitive", true));
-            json.Add(new JProperty("IsArray", false));
-            json.Add(new JProperty("IsNumeric", false));
             json.Add(new JProperty("Type", "Boolean"));
             json.Add(new JProperty("Value", value));
 
@@ -168,10 +133,6 @@ namespace Cable
         public static JObject TimeSpan(TimeSpan span)
         {
             var json = new JObject();
-
-            json.Add(new JProperty("IsPrimitive", true));
-            json.Add(new JProperty("IsArray", false));
-            json.Add(new JProperty("IsNumeric", false));
             json.Add(new JProperty("Type", "TimeSpan"));
             json.Add(new JProperty("Value", span.Ticks.ToString()));
 
@@ -268,9 +229,6 @@ namespace Cable
                     arr.Add(MakeJson(item));
                 }
                 
-                arrJson.Add(new JProperty("IsPrimitive", true));
-                arrJson.Add(new JProperty("IsArray", true));
-                arrJson.Add(new JProperty("IsNumeric", false));
                 arrJson.Add(new JProperty("Type", CollectionType(obj.GetType())));
                 arrJson.Add(new JProperty("Value", arr));
                 return arrJson;
@@ -279,9 +237,6 @@ namespace Cable
             {
                 var composite = (JObject)token;
                 var clone = new JObject();
-                clone.Add(new JProperty("IsPrimitive", false));
-                clone.Add(new JProperty("IsArray", false));
-                clone.Add(new JProperty("IsNumeric", false));
                 clone.Add(new JProperty("FromBridge", false));
                 // the Type property is only meant for Bridge client apps
                 // this will be a string that when evaluated in javascript

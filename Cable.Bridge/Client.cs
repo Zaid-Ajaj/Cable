@@ -3,6 +3,8 @@ using Bridge.Html5;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using System.Globalization;
 
 namespace Cable.Bridge
 {
@@ -28,12 +30,13 @@ namespace Cable.Bridge
             return "";
         }
 
-        private static object PostJsonSync(string url, object[] data)
+        private static object PostJsonSync(string url, Type returnType, object[] data)
         {
+            CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
             var xmlHttp = new XMLHttpRequest();
             xmlHttp.Open("POST", url, false);
 
-            var serialized = Json.Serialize(data);
+            var serialized = JsonConvert.SerializeObject(data, Formatting.Indented, new JsonSerializerSettings {  });
 
             xmlHttp.Send(serialized);
 
@@ -47,7 +50,7 @@ namespace Cable.Bridge
                 }
                 else
                 {
-                    var result = Json.Deserialize<object>(xmlHttp.ResponseText);
+                    var result = JsonConvert.DeserializeObject(xmlHttp.ResponseText, returnType);
                     return result;
                 }
             }
@@ -57,7 +60,7 @@ namespace Cable.Bridge
             }
         }
 
-        static async Task<object> PostJsonAsync(string url, object[] data)
+        static async Task<object> PostJsonAsync(string url, Type returnType, object[] parameters)
         {
             var tcs = new TaskCompletionSource<object>();
             var xmlHttp = new XMLHttpRequest();
@@ -69,6 +72,7 @@ namespace Cable.Bridge
                 {
                     if (xmlHttp.Status == 200 || xmlHttp.Status == 304)
                     {
+
                         var json = JSON.Parse(xmlHttp.ResponseText);
 
                         if (json == null)
@@ -81,25 +85,26 @@ namespace Cable.Bridge
                         }
                         else
                         {
-                            var result = Json.Deserialize<object>(xmlHttp.ResponseText);
+                            var result = JsonConvert.DeserializeObject(xmlHttp.ResponseText, returnType);
                             tcs.SetResult(result);
                         }
                     }
                     else
                     {
-                        tcs.SetException(new Exception(xmlHttp.StatusText));
+                        tcs.SetException(new Exception(xmlHttp.ResponseText));
                     }
                 }
 
             };
 
-            var serialized = Json.Serialize(data);
+            var serialized = JsonConvert.SerializeObject(parameters);
             xmlHttp.Send(serialized);
             return await tcs.Task;
         }
 
         static string Capitalized(string input)
         {
+            if (string.IsNullOrEmpty(input)) return "";
             return char.ToUpper(input[0]).ToString() + input.Substring(1, input.Length - 1);
         }
 
@@ -114,6 +119,7 @@ namespace Cable.Bridge
 
         public static T Resolve<T>()
         {
+            
             var serviceType = typeof(T);
 
             var serviceName = serviceType.Name;
@@ -127,6 +133,7 @@ namespace Cable.Bridge
 
             if (methods.Length == 0) throw new ArgumentException("The interface does not have any methods");
 
+            // create an object literal that operates as a typed-proxy 
             var service = Script.Write<object>("{}");
 
             foreach (var method in methods)
@@ -135,11 +142,12 @@ namespace Cable.Bridge
                 var instanceMethodName = $"{serviceFullName}${Capitalized(methodName)}";
                 if (IsTask(method.ReturnType))
                 {
+                    var taskArgs = method.ReturnType.GetGenericArguments();
                     service[instanceMethodName] = Lambda(async () =>
                     {
                         var parameters = Script.Write<object[]>("System.Linq.Enumerable.from(arguments).toArray()");
                         var url = UrlMapper(serviceName, Capitalized(methodName));
-                        var result = await PostJsonAsync(url, parameters);
+                        var result = await PostJsonAsync(url, typeof(object), parameters);
                         return result;
                     });
                 }
@@ -149,7 +157,7 @@ namespace Cable.Bridge
                     {
                         var parameters = Script.Write<object[]>("System.Linq.Enumerable.from(arguments).toArray()");
                         var url = UrlMapper(serviceName, Capitalized(methodName));
-                        var result = PostJsonSync(url, parameters);
+                        var result = PostJsonSync(url, method.ReturnType, parameters);
                         return result;
                     });
                 }

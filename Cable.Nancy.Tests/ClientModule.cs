@@ -6,7 +6,7 @@ namespace Cable.Nancy.Tests
     {
         public ClientModule(IService service)
         {
-            NancyServer.RegisterRoutesFor(this, service);
+            var schema = NancyServer.RegisterRoutesFor(this, service);
         }
     } 
 }

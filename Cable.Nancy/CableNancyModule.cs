@@ -7,6 +7,10 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using System.Dynamic;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System.Threading;
+using System.Globalization;
 
 namespace Cable.Nancy
 {
@@ -16,6 +20,19 @@ namespace Cable.Nancy
         public string Route { get; set; }
         public List<string> ParameterTypes { get; set; } = new List<string>();
         public string ReturnType { get; set; }
+    }
+
+    public class JsonHelper
+    {
+        public static T DefaultDeserialize<T>(string json)
+        {
+            return JsonConvert.DeserializeObject<T>(json);
+        }
+
+        public static string DefaultSerialize(object obj)
+        {
+            return JsonConvert.SerializeObject(obj);
+        }
     }
 
     public class CableRouteSchema
@@ -86,6 +103,9 @@ namespace Cable.Nancy
             }
         }
 
+
+        static Dictionary<string, CableRouteSchema> Cache = new Dictionary<string, CableRouteSchema>();
+
         /// <summary>
         /// Generates POST routes automatically for the a NancyModule.
         /// </summary>
@@ -95,6 +115,12 @@ namespace Cable.Nancy
         public static CableRouteSchema RegisterRoutesFor<TBase>(NancyModule module, TBase implementation)
         {
             var baseType = typeof(TBase);
+
+            //if (Cache.ContainsKey(baseType.FullName))
+            //{
+            //    return Cache[baseType.FullName];
+            //}
+            
 
             var type = implementation.GetType();
 
@@ -119,6 +145,8 @@ namespace Cable.Nancy
                 if (method.ContainsGenericParameters) throw new ArgumentException($"Method {method.Name} contains generic type parameters, this is not supported.");
                 RegisterRoute<TBase>(implementation, method, module, routeSchema);
             }
+
+            //Cache.Add(baseType.FullName, routeSchema);
 
             return routeSchema;
         }
@@ -163,43 +191,17 @@ namespace Cable.Nancy
                     {
                         var incomingJson = await reader.ReadToEndAsync();
 
-                        dynamic[] paramArrayValue;
-
-                        dynamic paramArray = Json.DefaultDeserialize<dynamic>(incomingJson);
-
-                        paramArrayValue = new dynamic[paramArray.Value.Count];
-
-                        for (var i = 0; i < paramArrayValue.Length; i++)
-                        {
-                            paramArrayValue[i] = Json.DefaultSerialize(paramArray.Value[i]);
-                        }
-
+                        var inputParameters = JArray.Parse(incomingJson);
+                       
                         var parameterTypes = method.GetParameters().Select(p => p.ParameterType).ToArray();
 
-                        object[] parameters = new object[paramArrayValue.Length];
+                        object[] parameters = new object[parameterTypes.Length];
 
                         for (var i = 0; i < parameters.Length; i++)
                         {
                             var type = parameterTypes[i];
-
-                            var genericCableDeserializer = typeof(Json).GetMethod("Deserialize").MakeGenericMethod(type);
-
-                            var deserialized = genericCableDeserializer.Invoke(null, new object[] { paramArrayValue[i] });
-
-                            if (deserialized.GetType() == typeof(ExpandoObject))
-                            {
-                                var genericDeserializer = typeof(Json).GetMethod("DefaultDeserialize").MakeGenericMethod(type);
-                                var serialized = Json.DefaultSerialize(deserialized as IDictionary<string, object>);
-                                parameters[i] = genericDeserializer.Invoke(null, new object[] { serialized });
-                            }
-                            else if (type == typeof(char))
-                            {
-                                parameters[i] = (char)deserialized;
-                            }
-                            else 
-                            {
-                                parameters[i] = deserialized;
-                            }
+                            // deserialize each parameter to it's respective type
+                            parameters[i] = inputParameters[i].ToObject(type);
                         }
 
                         object result = null;
@@ -214,7 +216,7 @@ namespace Cable.Nancy
                         }
 
 
-                        return Json.Serialize(result);
+                        return JsonConvert.SerializeObject(result);
                     }
                 }
                 catch (Exception ex)
@@ -222,7 +224,7 @@ namespace Cable.Nancy
                     var errorData = new Dictionary<string, object>();
                     errorData["$exception"] = true;
                     errorData["$exceptionData"] = ex;
-                    return Json.DefaultSerialize(errorData);
+                    return JsonConvert.SerializeObject(errorData);
                 }
             };
         }

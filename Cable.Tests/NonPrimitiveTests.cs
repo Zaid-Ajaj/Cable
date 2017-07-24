@@ -19,17 +19,8 @@ namespace Cable.Tests
         public void TypeInformationIsAddedToNonPrimitiveType()
         {
             var sample = Sample();
-
             var serialized = Json.Serialize(sample);
-
-            var json = JObject.Parse(serialized);
-
-            Assert.AreEqual(json["IsPrimitive"].Value<bool>(), false);
-            Assert.AreEqual(json["IsNumeric"].Value<bool>(), false);
-            Assert.AreEqual(json["IsArray"].Value<bool>(), false);            
-            Assert.AreEqual(json["Value"]["Id"]["IsPrimitive"].Value<bool>(), true);
-            Assert.AreEqual(json["Value"]["Id"]["IsNumeric"].Value<bool>(), true);
-            Assert.AreEqual(json["Value"]["Id"]["IsArray"].Value<bool>(), false);
+            var json = JObject.Parse(serialized);         
             Assert.AreEqual(json["Value"]["Id"]["Type"].Value<string>(), "Int32");
             Assert.AreEqual(json["Value"]["Id"]["Value"].Value<int>(), 5);
         }

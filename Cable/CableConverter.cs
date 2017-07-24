@@ -34,208 +34,196 @@ namespace Cable
                 return null;
             }
 
-            if (json["IsPrimitive"].Value<bool>())
+            if (type == "DateTime")
             {
-
-                if (type == "DateTime")
+                var value = json["Value"].Value<string>();
+                return DateTime.ParseExact(value, "dd/MM/yyyy HH:mm:ss.fff", CultureInfo.InvariantCulture);
+            }
+            else if (type == "Int64")
+            {
+                return long.Parse(json["Value"].Value<string>(), CultureInfo.InvariantCulture);
+            }
+            else if (type == "UInt64")
+            {
+                return ulong.Parse(json["Value"].Value<string>());
+            }
+            else if (type == "Int32" && objectType != typeof(char))
+            {
+                return int.Parse(json["Value"].Value<string>(), CultureInfo.InvariantCulture);
+            }
+            else if (type == "UInt32")
+            {
+                return uint.Parse(json["Value"].Value<string>(), CultureInfo.InvariantCulture);
+            }
+            else if (type == "Int16")
+            {
+                return short.Parse(json["Value"].Value<string>(), CultureInfo.InvariantCulture);
+            }
+            else if (type == "UInt16")
+            {
+                return ushort.Parse(json["Value"].Value<string>(), CultureInfo.InvariantCulture);
+            }
+            else if (type == "Decimal")
+            {
+                return decimal.Parse(json["Value"].Value<string>(), CultureInfo.InvariantCulture);
+            }
+            else if (type == "SByte")
+            {
+                return sbyte.Parse(json["Value"].Value<string>(), CultureInfo.InvariantCulture);
+            }
+            else if (type == "Byte")
+            {
+                return byte.Parse(json["Value"].Value<string>(), CultureInfo.InvariantCulture);
+            }
+            else if (type == "Single")
+            {
+                return float.Parse(json["Value"].Value<string>(), CultureInfo.InvariantCulture);
+            }
+            else if (type == "Double")
+            {
+                return double.Parse(json["Value"].Value<string>(), CultureInfo.InvariantCulture);
+            }
+            else if (type == "Boolean")
+            {
+                return json["Value"].Value<bool>();
+            }
+            else if (type == "String")
+            {
+                return json["Value"].Value<string>();
+            }
+            else if (type == "Char" || objectType == typeof(char))
+            {
+                return (char)json["Value"].Value<int>();
+            }
+            else if (type == "Enum")
+            {
+                return Convert.ChangeType(Enum.Parse(objectType, json["Value"].Value<string>()), objectType);
+            }
+            else if (type == "TimeSpan")
+            {
+                return TimeSpan.FromTicks(long.Parse(json["Value"].Value<string>()));
+            }
+            else if (type == "Array")
+            {
+                var arr = (JArray)json["Value"];
+                if (arr.Count > 0
+                    && objectType != null
+                    && objectType != typeof(object[])
+                    && objectType != typeof(object)
+                    && !IsEnumerableOfSomething(objectType)
+                  )
                 {
-                    var year = json["Value"]["Year"].Value<int>();
-                    var month = json["Value"]["Month"].Value<int>();
-                    var day = json["Value"]["Day"].Value<int>();
-                    var hour = json["Value"]["Hour"].Value<int>();
-                    var minute = json["Value"]["Minute"].Value<int>();
-                    var second = json["Value"]["Second"].Value<int>();
-                    var millesecond = json["Value"]["Millisecond"].Value<int>();
-                   //var serializedKind = json["Value"]["Kind"].Value<string>();
-                   //var kind = (DateTimeKind)Enum.Parse(typeof(DateTimeKind), serializedKind);
-                    return new DateTime(year, month, day, hour, minute, second, millesecond);
-                }
-                else if (type == "Int64")
-                {
-                    return long.Parse(json["Value"].Value<string>(), CultureInfo.InvariantCulture);
-                }
-                else if (type == "UInt64")
-                {
-                    return ulong.Parse(json["Value"].Value<string>());
-                }
-                else if (type == "Int32" && objectType != typeof(char))
-                {
-                    return int.Parse(json["Value"].Value<string>(), CultureInfo.InvariantCulture);
-                }
-                else if (type == "UInt32")
-                {
-                    return uint.Parse(json["Value"].Value<string>(), CultureInfo.InvariantCulture);
-                }
-                else if (type == "Int16")
-                {
-                    return short.Parse(json["Value"].Value<string>(), CultureInfo.InvariantCulture);
-                }
-                else if (type == "UInt16")
-                {
-                    return ushort.Parse(json["Value"].Value<string>(), CultureInfo.InvariantCulture);
-                }
-                else if (type == "Decimal")
-                {
-                    return decimal.Parse(json["Value"].Value<string>(), CultureInfo.InvariantCulture);
-                }
-                else if (type == "SByte")
-                {
-                    return sbyte.Parse(json["Value"].Value<string>(), CultureInfo.InvariantCulture);
-                }
-                else if (type == "Byte")
-                {
-                    return byte.Parse(json["Value"].Value<string>(), CultureInfo.InvariantCulture);
-                }
-                else if (type == "Single")
-                {
-                    return float.Parse(json["Value"].Value<string>(), CultureInfo.InvariantCulture);
-                }
-                else if( type == "Double")
-                {
-                    return double.Parse(json["Value"].Value<string>(), CultureInfo.InvariantCulture);
-                }
-                else if (type == "Boolean")
-                {
-                    return json["Value"].Value<bool>();
-                }
-                else if (type == "String")
-                {
-                    return json["Value"].Value<string>();
-                }
-                else if (type == "Char" || objectType == typeof(char))
-                {
-                    return (char)json["Value"].Value<int>();
-                }
-                else if (type == "Enum")
-                {
-                    return Convert.ChangeType(Enum.Parse(objectType, json["Value"].Value<string>()), objectType);
-                }
-                else if (type == "TimeSpan")
-                {
-                    return TimeSpan.FromTicks(long.Parse(json["Value"].Value<string>()));
-                }
-                else if (type == "Array")
-                {
-                    var arr = (JArray)json["Value"];
-                    if (   arr.Count > 0 
-                        && objectType != null 
-                        && objectType != typeof(object[]) 
-                        && objectType != typeof(object)
-                        && !IsEnumerableOfSomething(objectType)
-                      )
+                    // get the type of the array
+                    var arrType = objectType.GetElementType();
+                    // create a typed array with the approriate length
+                    var array = Array.CreateInstance(arrType, arr.Count);
+                    for (int i = 0; i < arr.Count; i++)
                     {
-                        // get the type of the array
-                        var arrType = objectType.GetElementType();
-                        // create a typed array with the approriate length
-                        var array = Array.CreateInstance(arrType, arr.Count);
-                        for (int i = 0; i < arr.Count; i++)
-                        {
-                            // deserialize each value of the array
-                            var value = serializer.Deserialize(arr[i].CreateReader(), arrType);
-                            array.SetValue(value, i);
-                        }
-                        return array;
+                        // deserialize each value of the array
+                        var value = serializer.Deserialize(arr[i].CreateReader(), arrType);
+                        array.SetValue(value, i);
                     }
-                    else if (IsEnumerableOfSomething(objectType))
-                    {
-                        var typeOfThatSomething = objectType.GetGenericArguments()[0];
-                        var array = Array.CreateInstance(typeOfThatSomething, arr.Count);
-                        for (int i = 0; i < arr.Count; i++)
-                        {
-                            var value = serializer.Deserialize(arr[i].CreateReader(), typeOfThatSomething);
-                            array.SetValue(value, i);
-                        }
-                        return array;
-                    }
-                    else if (objectType != null && arr.Count == 0)
-                    {
-                        return Array.CreateInstance(objectType, 0);
-                    }
-                    else if (arr.Count == 0)
-                    {
-                        return new object[] { };
-                    }
-                    else
-                    {
-                        var array = new List<dynamic>();
-                        for (int i = 0; i < arr.Count; i++)
-                        {
-                            // var value = serializer.Deserialize(arr[i].CreateReader());
-                            var value = ReadJson(arr[i].CreateReader(), null, null, serializer);
-                            array.Add((dynamic)value);
-                        }
-                        return array.ToArray();
-                    }
-
-                } 
-                else if (type == "List")
-                {
-                    var arr = (JArray)json["Value"];
-
-                    var listType = objectType.GetGenericArguments()[0];
-
-                    if (arr.Count > 0 && objectType != null)
-                    {
-                        
-                        dynamic list = Activator.CreateInstance(typeof(List<>).MakeGenericType(listType));
-                        list.Capacity = arr.Count;
-                        for (int i = 0; i < arr.Count; i++)
-                        {
-                            var value = serializer.Deserialize(arr[i].CreateReader(), listType);
-                            list.Add((dynamic)value);
-                        }
-                        return list;
-                    }
-                    else
-                    {
-                        return Activator.CreateInstance(typeof(List<>).MakeGenericType(listType));
-                    }
+                    return array;
                 }
-                else if (type == "Stack")
+                else if (IsEnumerableOfSomething(objectType))
                 {
-                    var arr = (JArray)json["Value"];
-
-                    var listType = objectType.GetGenericArguments()[0];
-                    dynamic stack = Activator.CreateInstance(typeof(Stack<>).MakeGenericType(listType));
-
-                    if (arr.Count > 0 && objectType != null)
+                    var typeOfThatSomething = objectType.GetGenericArguments()[0];
+                    var array = Array.CreateInstance(typeOfThatSomething, arr.Count);
+                    for (int i = 0; i < arr.Count; i++)
                     {
-                        
-                        for(int i = arr.Count - 1; i >= 0; i--)
-                        {
-                            var value = serializer.Deserialize(arr[i].CreateReader(), listType);
-                            stack.Push((dynamic)value);
-                        }
-
-                        return stack;
-                    } 
-                    else
-                    {
-                        return stack;
+                        var value = serializer.Deserialize(arr[i].CreateReader(), typeOfThatSomething);
+                        array.SetValue(value, i);
                     }
+                    return array;
                 }
-                else if (type == "Queue")
+                else if (objectType != null && arr.Count == 0)
                 {
-                    var arr = (JArray)json["Value"];
-
-                    var listType = objectType.GetGenericArguments()[0];
-                    dynamic queue = Activator.CreateInstance(typeof(Queue<>).MakeGenericType(listType));
-
-                    if (arr.Count > 0 && objectType != null)
+                    return Array.CreateInstance(objectType, 0);
+                }
+                else if (arr.Count == 0)
+                {
+                    return new object[] { };
+                }
+                else
+                {
+                    var array = new List<dynamic>();
+                    for (int i = 0; i < arr.Count; i++)
                     {
-
-                        for (int i = 0; i < arr.Count; i++)
-                        {
-                            var value = serializer.Deserialize(arr[i].CreateReader(), listType);
-                            queue.Enqueue((dynamic)value);
-                        }
-
-                        return queue;
+                        // var value = serializer.Deserialize(arr[i].CreateReader());
+                        var value = ReadJson(arr[i].CreateReader(), null, null, serializer);
+                        array.Add((dynamic)value);
                     }
-                    else
+                    return array.ToArray();
+                }
+
+            }
+            else if (type == "List")
+            {
+                var arr = (JArray)json["Value"];
+
+                var listType = objectType.GetGenericArguments()[0];
+
+                if (arr.Count > 0 && objectType != null)
+                {
+
+                    dynamic list = Activator.CreateInstance(typeof(List<>).MakeGenericType(listType));
+                    list.Capacity = arr.Count;
+                    for (int i = 0; i < arr.Count; i++)
                     {
-                        return queue;
+                        var value = serializer.Deserialize(arr[i].CreateReader(), listType);
+                        list.Add((dynamic)value);
                     }
+                    return list;
+                }
+                else
+                {
+                    return Activator.CreateInstance(typeof(List<>).MakeGenericType(listType));
+                }
+            }
+            else if (type == "Stack")
+            {
+                var arr = (JArray)json["Value"];
+
+                var listType = objectType.GetGenericArguments()[0];
+                dynamic stack = Activator.CreateInstance(typeof(Stack<>).MakeGenericType(listType));
+
+                if (arr.Count > 0 && objectType != null)
+                {
+
+                    for (int i = arr.Count - 1; i >= 0; i--)
+                    {
+                        var value = serializer.Deserialize(arr[i].CreateReader(), listType);
+                        stack.Push((dynamic)value);
+                    }
+
+                    return stack;
+                }
+                else
+                {
+                    return stack;
+                }
+            }
+            else if (type == "Queue")
+            {
+                var arr = (JArray)json["Value"];
+
+                var listType = objectType.GetGenericArguments()[0];
+                dynamic queue = Activator.CreateInstance(typeof(Queue<>).MakeGenericType(listType));
+
+                if (arr.Count > 0 && objectType != null)
+                {
+
+                    for (int i = 0; i < arr.Count; i++)
+                    {
+                        var value = serializer.Deserialize(arr[i].CreateReader(), listType);
+                        queue.Enqueue((dynamic)value);
+                    }
+
+                    return queue;
+                }
+                else
+                {
+                    return queue;
                 }
             }
             else
@@ -294,8 +282,6 @@ namespace Cable
 
                 return instance;
             }
-            
-            return null;
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
