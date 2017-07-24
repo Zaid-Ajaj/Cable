@@ -284,7 +284,6 @@ namespace Cable.Bridge
                 var result = DateTime.ParseExact(json["Value"].As<string>(), format, CultureInfo.InvariantCulture);
                 return EliminateBoxing(result as object);
             }
-
             else if (type == "String") return json["Value"];
 
             else if(type == "Char") return (char)(json["Value"].As<int>());
@@ -315,8 +314,9 @@ namespace Cable.Bridge
             {
                 var enumType = Type.GetType(json["EnumType"].As<string>());
                 var enumValue = Enum.Parse(enumType, json["Value"].As<string>());
+                return enumValue;
             }
-            if (json["Type"].As<string>() == "Array")
+            else if (type  == "Array")
             {
                 var encodedItems = json["Value"].As<object[]>();
                 var arr = new object[encodedItems.Length];
@@ -328,8 +328,9 @@ namespace Cable.Bridge
 
                 return arr;
             }
-            else if (json["Type"].As<string>() == "List")
+            else if (type == "List")
             {
+                Script.Write("console.log('List found!', json);");
                 var encodedItems = json["Value"].As<object[]>();
                 var list = new List<object>();
                 for (int i = 0; i < encodedItems.Length; i++)

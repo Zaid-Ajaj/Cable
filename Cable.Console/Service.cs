@@ -19,6 +19,10 @@ namespace Cable.Console
             return Task.FromResult(result);
         }
 
+        public Task<List<int>> EchoListOfInt(List<int> input)
+        {
+            return Task.FromResult(input);
+        }
 
         public Task<WrappedDateTime> EchoWrappedDateTime(WrappedDateTime value)
         {

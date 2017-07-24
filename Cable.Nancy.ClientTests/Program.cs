@@ -217,6 +217,18 @@ namespace Cable.Nancy.ClientTests
            });
 
 
+            var listOfInts = new List<int>();
+            listOfInts.Add(42);
+            listOfInts.Add(55);
+
+            var echoedListOfInts = await Server.EchoListOfInt(listOfInts);
+
+            QUnit.Test("IService.EchoListOfInt()", assert =>
+            {
+                assert.Equal(echoedListOfInts[0], 42);
+                assert.Equal(echoedListOfInts[1], 55);
+            });
+
             var longMatrix = new long[][]
             {
                 new long[] { 1L, 2L, 3L, 4L, 5L }

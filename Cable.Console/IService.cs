@@ -34,6 +34,8 @@ namespace Client
 
         Task<string> NoArgumentsReturningString();
 
+        Task<List<int>> EchoListOfInt(List<int> input);
+
         int SyncAdd(int x, int y);
 
         DateTime NowPlusHoursSync(int n);
