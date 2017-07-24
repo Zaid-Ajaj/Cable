@@ -24,11 +24,17 @@ namespace Cable
             return JsonConvert.DeserializeObject<T>(json, new CableConverter());
         }
 
+        public static object Deserialize(string json, Type type)
+        {
+            return JsonConvert.DeserializeObject(json, type, new CableConverter());
+        } 
+
         public static T DefaultDeserialize<T>(string json)
         {
             return JsonConvert.DeserializeObject<T>(json);
         }
 
+        
         public static string DefaultSerialize(object obj)
         {
             return JsonConvert.SerializeObject(obj);

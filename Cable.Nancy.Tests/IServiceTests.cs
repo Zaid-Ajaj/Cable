@@ -6,6 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
+using Cable;
 
 namespace Cable.Nancy.Tests
 {
@@ -16,13 +19,14 @@ namespace Cable.Nancy.Tests
 
         static string Args(object[] args)
         {
-            var serialized = JsonHelper.DefaultSerialize(args);
+            var serialized = Json.Serialize(args);
             return serialized;
         }
 
         static T FromBody<T>(BrowserResponseBodyWrapper body)
         {
-            return JsonHelper.DefaultDeserialize<T>(body.AsString());
+            var result = body.AsString();
+            return JsonConvert.DeserializeObject<T>(result, new CableConverter());
         }
 
         void SendReq(string path, params object[] args)

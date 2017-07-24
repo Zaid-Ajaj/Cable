@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Threading;
 using System.Globalization;
+using Cable;
 
 namespace Cable.Nancy
 {
@@ -151,6 +152,20 @@ namespace Cable.Nancy
             return routeSchema;
         }
 
+
+        public static JsonSerializer CreateCableSerializer()
+        {
+            var settings = new JsonSerializerSettings
+            {
+                Converters = new JsonConverter[]
+                {
+                    new CableConverter()
+                }
+            };
+
+            return JsonSerializer.Create(settings);
+        }
+
         static string ToCamelCase(string input)
         {
             if (!string.IsNullOrEmpty(input))
@@ -191,8 +206,9 @@ namespace Cable.Nancy
                     {
                         var incomingJson = await reader.ReadToEndAsync();
 
-                        var inputParameters = JArray.Parse(incomingJson);
-                       
+                        var inputParameters = JObject.Parse(incomingJson);
+
+                        var jsonParameters = inputParameters["Value"] as JArray;
                         var parameterTypes = method.GetParameters().Select(p => p.ParameterType).ToArray();
 
                         object[] parameters = new object[parameterTypes.Length];
@@ -201,7 +217,8 @@ namespace Cable.Nancy
                         {
                             var type = parameterTypes[i];
                             // deserialize each parameter to it's respective type
-                            parameters[i] = inputParameters[i].ToObject(type);
+                            var json = jsonParameters[i].ToString();
+                            parameters[i] = Json.Deserialize(json, type);
                         }
 
                         object result = null;
@@ -216,7 +233,7 @@ namespace Cable.Nancy
                         }
 
 
-                        return JsonConvert.SerializeObject(result);
+                        return Json.Serialize(result);
                     }
                 }
                 catch (Exception ex)
@@ -228,6 +245,5 @@ namespace Cable.Nancy
                 }
             };
         }
-
     }
 }
