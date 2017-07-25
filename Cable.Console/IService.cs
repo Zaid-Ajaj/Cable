@@ -64,6 +64,8 @@ namespace Client
 
         Task<int> GenericInt(Generic<int> g);
 
+        Task<List<int>> MapGenericInsToListOfInts(List<Generic<int>> xs);
+
         Task<SimpleNested> GenericSimpleNested(Generic<SimpleNested> g);
 
         Task<int> ReturnFirst(DoubleGeneric<int, string> g);

@@ -73,7 +73,7 @@ namespace Cable.Nancy.ClientTests
 
             int int32 = 20;
             long int64 = 35L;
-            double Double = 2.1;
+            double Double = 2.0;
             decimal Decimal = 2.3454m;
 
             var numericResults = await Server.NumericPrimitives
@@ -125,6 +125,18 @@ namespace Cable.Nancy.ClientTests
                 assert.Equal(lengthsOfArrays[0], 3);
                 assert.Equal(lengthsOfArrays[1], 2);
                 assert.Equal(lengthsOfArrays[2], 4);
+            });
+
+
+            int[] generinInts = { 1, 2, 3, 4, 5 };
+            var listOfGenericInts = generinInts.Select(x => new Generic<int> { Value = x }).ToList();
+
+            var listResult = await Server.MapGenericInsToListOfInts(listOfGenericInts);
+
+            QUnit.Test("IService.MapGenericInsToListOfInts()", assert =>
+            {
+                assert.Equal(listResult.Sum(), 15);
+
             });
 
 
@@ -225,8 +237,8 @@ namespace Cable.Nancy.ClientTests
 
             QUnit.Test("IService.EchoListOfInt()", assert =>
             {
-                assert.Equal(echoedListOfInts[0], 42);
-                assert.Equal(echoedListOfInts[1], 55);
+                assert.Equal(echoedListOfInts[0], listOfInts[0]);
+                assert.Equal(echoedListOfInts[1], listOfInts[1]);
             });
 
             var longMatrix = new long[][]

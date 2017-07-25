@@ -13,6 +13,14 @@ namespace Cable.Bridge
             return JSON.Stringify(encodedWithoutBoxing);
         }
 
+
+        public static object SerializeToObjectLiteral(object obj, Type type)
+        {
+            var encoded = Converters.EncodeObject(obj, type.Name);
+            var encodedWithoutBoxing = Converters.EliminateBoxing(encoded);
+            return encodedWithoutBoxing;
+        }
+
         public static object Deserialize(string json, Type type)
         {
             var parsed = JSON.Parse(json);

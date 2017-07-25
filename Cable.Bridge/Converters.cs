@@ -53,7 +53,7 @@ namespace Cable.Bridge
 
         public static Property[] ExtactExistingProps(object input)
         {
-            var props = Script.Write<Property[]>("[]");
+            var props = new List<Property>();
             var inputType = input.GetType();
             var properties = inputType.GetProperties();
             foreach(var prop in properties)
@@ -64,10 +64,11 @@ namespace Cable.Bridge
                     Type = prop.PropertyType,
                     Value = input[prop.Name]
                 };
-                Script.Write("props.push(property)");
+
+                props.Add(property);
             }
 
-            return props;
+            return props.ToArray();
         }
 
         public static object EncodeDateTime(DateTime time)
@@ -330,7 +331,6 @@ namespace Cable.Bridge
             }
             else if (type == "List")
             {
-                Script.Write("console.log('List found!', json);");
                 var encodedItems = json["Value"].As<object[]>();
                 var list = new List<object>();
                 for (int i = 0; i < encodedItems.Length; i++)

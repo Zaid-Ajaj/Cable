@@ -102,6 +102,48 @@ namespace Cable.Bridge
             return await tcs.Task;
         }
 
+        static async Task<object> PostObjectLiteralAsync(string url, Type returnType, object objectLiteral)
+        {
+            var tcs = new TaskCompletionSource<object>();
+            var xmlHttp = new XMLHttpRequest();
+            xmlHttp.Open("POST", url, true);
+            xmlHttp.SetRequestHeader("Content-Type", "application/json");
+            xmlHttp.OnReadyStateChange = () =>
+            {
+                if (xmlHttp.ReadyState == AjaxReadyState.Done)
+                {
+                    if (xmlHttp.Status == 200 || xmlHttp.Status == 304)
+                    {
+
+                        var json = JSON.Parse(xmlHttp.ResponseText);
+
+                        if (json == null)
+                        {
+                            tcs.SetResult(null);
+                        }
+                        else if (Script.IsDefined(json["$exception"]) && json["$exception"].As<bool>())
+                        {
+                            tcs.SetException(new Exception(json["$exceptionData"]["Message"].As<string>()));
+                        }
+                        else
+                        {
+                            var result = Json.Deserialize(xmlHttp.ResponseText, returnType);
+                            tcs.SetResult(result);
+                        }
+                    }
+                    else
+                    {
+                        tcs.SetException(new Exception(xmlHttp.ResponseText));
+                    }
+                }
+
+            };
+
+            var serialized = JSON.Stringify(objectLiteral);
+            xmlHttp.Send(serialized);
+            return await tcs.Task;
+        }
+
         static string Capitalized(string input)
         {
             if (string.IsNullOrEmpty(input)) return "";
@@ -140,15 +182,34 @@ namespace Cable.Bridge
             {
                 var methodName = method.Name;
                 var instanceMethodName = $"{serviceFullName}${Capitalized(methodName)}";
+                var paramterTypes = method.ParameterTypes;
                 if (IsTask(method.ReturnType))
                 {
                     var taskArgs = method.ReturnType.GetGenericArguments();
+
+                    // wait for issue #2986 to be fixed https://github.com/bridgedotnet/Bridge/issues/2986 
                     // var taskType = taskArgs[0];
+                     var taskType = typeof(object);
                     service[instanceMethodName] = Lambda(async () =>
                     {
                         var parameters = Script.Write<object[]>("System.Linq.Enumerable.from(arguments).toArray()");
+
+                        var encodedParameters = Script.Write<object[]>("[]");
+
+                        for(var i = 0; i < parameters.Length; i++)
+                        {
+                            var paramter = parameters[i];
+                            var paramterType = paramterTypes[i];
+                            var serializedParameter = Json.SerializeToObjectLiteral(paramter, paramterType);
+                            Script.Write("encodedParameters.push(serializedParameter)");
+                        }
+
+                        var json = new object();
+                        json["Type"] = "Array";
+                        json["Value"] = encodedParameters;
+
                         var url = UrlMapper(serviceName, Capitalized(methodName));
-                        var result = await PostJsonAsync(url, typeof(object), parameters);
+                        var result = await PostObjectLiteralAsync(url, taskType, json);
                         return result;
                     });
                 }

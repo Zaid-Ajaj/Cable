@@ -29,6 +29,12 @@ namespace Cable.Console
             return Task.FromResult(value);
         }
 
+        public Task<List<int>> MapGenericInsToListOfInts(List<Generic<int>> xs)
+        {
+            var result = xs.Select(x => x.Value).ToList();
+            return Task.FromResult(result);
+        }
+
         public Task<bool> StringInt(string arg1, int arg2)
         {
             bool result = true;
