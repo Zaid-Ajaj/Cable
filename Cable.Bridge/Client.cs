@@ -32,7 +32,6 @@ namespace Cable.Bridge
 
         private static object PostJsonSync(string url, Type returnType, object[] data)
         {
-            CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
             var xmlHttp = new XMLHttpRequest();
             xmlHttp.Open("POST", url, false);
 
@@ -185,18 +184,16 @@ namespace Cable.Bridge
                 var paramterTypes = method.ParameterTypes;
                 if (IsTask(method.ReturnType))
                 {
-                    var taskArgs = method.ReturnType.GetGenericArguments();
-
-                    // wait for issue #2986 to be fixed https://github.com/bridgedotnet/Bridge/issues/2986 
-                    // var taskType = taskArgs[0];
-                     var taskType = typeof(object);
                     service[instanceMethodName] = Lambda(async () =>
                     {
+                        var taskArgs = method.ReturnType.GetGenericArguments();
+                        // wait for issue #2986 to be fixed https://github.com/bridgedotnet/Bridge/issues/2986 
+                        // var taskType = taskArgs[0];
+                        var taskType = typeof(object);
                         var parameters = Script.Write<object[]>("System.Linq.Enumerable.from(arguments).toArray()");
-
                         var encodedParameters = Script.Write<object[]>("[]");
 
-                        for(var i = 0; i < parameters.Length; i++)
+                        for (var i = 0; i < parameters.Length; i++)
                         {
                             var paramter = parameters[i];
                             var paramterType = paramterTypes[i];
@@ -217,9 +214,24 @@ namespace Cable.Bridge
                 {
                     service[instanceMethodName] = Lambda(() =>
                     {
+                       
                         var parameters = Script.Write<object[]>("System.Linq.Enumerable.from(arguments).toArray()");
+                        var encodedParameters = Script.Write<object[]>("[]");
+
+                        for (var i = 0; i < parameters.Length; i++)
+                        {
+                            var paramter = parameters[i];
+                            var paramterType = paramterTypes[i];
+                            var serializedParameter = Json.SerializeToObjectLiteral(paramter, paramterType);
+                            Script.Write("encodedParameters.push(serializedParameter)");
+                        }
+
+                        var json = new object();
+                        json["Type"] = "Array";
+                        json["Value"] = encodedParameters;
+
                         var url = UrlMapper(serviceName, Capitalized(methodName));
-                        var result = PostJsonSync(url, method.ReturnType, parameters);
+                        var result = PostJsonSync(url, typeof(object), parameters);
                         return result;
                     });
                 }
