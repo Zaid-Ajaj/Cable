@@ -3,7 +3,6 @@ using Bridge.Html5;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 using System.Globalization;
 
 namespace Cable.Bridge
@@ -151,18 +150,17 @@ namespace Cable.Bridge
 
         public static Func<string, string, string> UrlMapper = (serviceName, methodName) => $"/{serviceName}/{methodName}";
 
-        public static Action<string> Logger = x => Script.Call("console.log", x);
-
         private static bool IsTask(Type t)
         {
             return t.FullName == "System.Threading.Tasks.Task`1";
         }
 
+        /// <summary>
+        /// Creates a proxy for a shared interface between the client and the server. 
+        /// </summary>
         public static T Resolve<T>()
         {
-            
             var serviceType = typeof(T);
-
             var serviceName = serviceType.Name;
             var serviceFullName = serviceType.FullName.Replace(".", "$");
 
