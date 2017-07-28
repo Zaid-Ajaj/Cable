@@ -22,9 +22,6 @@ namespace Cable.Bridge.Tests
 
                 var encoded = Converters.EncodeObject(list);
 
-                assert.Equal(encoded["IsPrimitive"], true);
-                assert.Equal(encoded["IsArray"], true);
-                assert.Equal(encoded["IsNumeric"], false);
                 assert.Equal(encoded["Type"], "List");
                 assert.Equal(encoded["Value"]["length"], list.Count);
             });

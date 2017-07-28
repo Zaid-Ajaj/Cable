@@ -255,7 +255,7 @@ namespace Cable.Nancy.ClientTests
             var person = new Person
             {
                 Age = 20,
-                Name = "Zaid",
+                Name = "Mike",
                 Money = 22.399m,
                 IsMarried = false,
                 DateOfBirth = date
@@ -264,7 +264,7 @@ namespace Cable.Nancy.ClientTests
             QUnit.Test("IService.EchoPerson()", assert =>
             {
                 var syncEchoedPerson = Server.EchoPerson(person);
-                assert.Equal(syncEchoedPerson.Name, "Zaid");
+                assert.Equal(syncEchoedPerson.Name, "Mike");
                 assert.Equal(syncEchoedPerson.Age, 20);
                 assert.Equal(syncEchoedPerson.Money == 22.399m, true);
                 DatesEqual(assert, date, syncEchoedPerson.DateOfBirth);
@@ -275,7 +275,7 @@ namespace Cable.Nancy.ClientTests
 
             QUnit.Test("IService.EchoTaskPerson()", assert =>
             {
-                assert.Equal(personTask.Name, "Zaid");
+                assert.Equal(personTask.Name, "Mike");
                 assert.Equal(personTask.Age, 20);
                 assert.Equal(personTask.Money == 22.399m, true);
                 DatesEqual(assert, date, personTask.DateOfBirth);
@@ -333,7 +333,7 @@ namespace Cable.Nancy.ClientTests
 
             QUnit.Test("IService.EchoGenericPerson()", assert =>
             {
-                assert.Equal(genericPerson.Value.Name, "Zaid");
+                assert.Equal(genericPerson.Value.Name, "Mike");
                 assert.Equal(genericPerson.Value.Age, 20);
                 assert.Equal(genericPerson.Value.Money == 22.399m, true);
                 DatesEqual(assert, date, genericPerson.Value.DateOfBirth);

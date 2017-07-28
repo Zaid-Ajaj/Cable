@@ -16,17 +16,8 @@ namespace Cable.Bridge.Tests
             
             QUnit.Test("Encoding DateTime works", assert =>
             {
-                assert.Equal(encoded["IsPrimitive"], true);
-                assert.Equal(encoded["IsArray"], false);
-                assert.Equal(encoded["IsNumeric"], false);
                 assert.Equal(encoded["Type"], "DateTime");
-                assert.Equal(encoded["Value"]["Year"], 2016);
-                assert.Equal(encoded["Value"]["Month"], 12);
-                assert.Equal(encoded["Value"]["Day"], 10);
-                assert.Equal(encoded["Value"]["Hour"], 20);
-                assert.Equal(encoded["Value"]["Minute"], 30);
-                assert.Equal(encoded["Value"]["Second"], 0);
-                assert.Equal(encoded["Value"]["Millisecond"], 235);
+                assert.Equal(encoded["Value"], time.ToString("dd/MM/yyyy HH:mm:ss.fff"));
             });
 
             QUnit.Test("Encoding boxed DateTime works", assert =>

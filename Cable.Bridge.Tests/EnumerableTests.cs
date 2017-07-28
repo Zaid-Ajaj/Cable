@@ -34,16 +34,10 @@ namespace Cable.Bridge.Tests
                 var range = System.Linq.Enumerable.Range(1, 1);
                 var converted = Converters.EncodeObject(range);
                 assert.Equal(converted == null, false);
-                assert.Equal(converted["IsPrimitive"], true);
-                assert.Equal(converted["IsArray"], true);
-                assert.Equal(converted["IsNumeric"], false);
                 assert.Equal(converted["Type"], "Array");
                 assert.Equal(converted["Value"]["length"], 1);
 
                 var number = Script.Write<object>("converted.Value[0]");
-                assert.Equal(number["IsPrimitive"], true);
-                assert.Equal(number["IsNumeric"], true);
-                assert.Equal(number["IsArray"], false);
                 assert.Equal(number["Type"], "Int32");
                 assert.Equal(number["Value"], 1);
             });
