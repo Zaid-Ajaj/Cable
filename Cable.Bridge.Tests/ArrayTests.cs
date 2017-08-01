@@ -24,10 +24,7 @@ namespace Cable.Bridge.Tests
                     assert.Equal(intJson["Type"], "Int32");
                     assert.Equal(intJson["Value"], i + 1);
                 }
-
             });
-
-
         }
 
 

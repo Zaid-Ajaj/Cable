@@ -14,7 +14,6 @@ namespace Cable.Tests
             var now = DateTime.Now;
 
             string serialized = Json.Serialize(now);
-
             var deserialized = Json.Deserialize<DateTime>(serialized);
 
             Assert.AreEqual(now.Year, deserialized.Year);

@@ -92,7 +92,20 @@ namespace Cable.Nancy
         }
 
 
-        static Dictionary<string, CableRouteSchema> Cache = new Dictionary<string, CableRouteSchema>();
+        public static bool EnableLogging = false;
+
+        
+
+        private static void Logger(string text)
+        {
+            if (!EnableLogging) return;
+
+            var builder = new StringBuilder();
+            builder.AppendLine("Cable:");
+            builder.AppendLine(text);
+            var output = builder.ToString();
+            Console.WriteLine(output);
+        }
 
         /// <summary>
         /// Generates POST routes automatically for the a NancyModule.
