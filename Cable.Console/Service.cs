@@ -29,6 +29,11 @@ namespace Cable.Console
             return Task.FromResult(value);
         }
 
+        public Task<ExampleEnum> EchoEnumAsync(ExampleEnum value)
+        {
+            return Task.FromResult(value);
+        }
+
         public Task<List<int>> MapGenericInsToListOfInts(List<Generic<int>> xs)
         {
             var result = xs.Select(x => x.Value).ToList();

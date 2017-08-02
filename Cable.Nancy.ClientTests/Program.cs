@@ -150,6 +150,15 @@ namespace Cable.Nancy.ClientTests
                 assert.Equal(inputDouble2, outputDouble2);
             });
 
+
+            var echoedEnum = await Server.EchoEnumAsync(ExampleEnum.One);
+
+            QUnit.Test("IService.EchoEnumAsync()", assert =>
+            {
+                Script.Call("console.log", echoedEnum);
+                assert.Equal(echoedEnum == ExampleEnum.One, true);
+            });
+
             var wrappedDouble1 = new WrappedDouble { Value = 4.45 };
             var wrappedDouble2 = new WrappedDouble { Value = 2.0 };
 

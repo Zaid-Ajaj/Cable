@@ -22,6 +22,13 @@ namespace Client
         public double Value { get; set; }
     }
 
+    public enum ExampleEnum
+    {
+        One,
+        Two,
+        Three
+    }
+
     public class SimpleNested
     {
         public int Int { get; set; }

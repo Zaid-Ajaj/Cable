@@ -16,7 +16,7 @@ namespace Cable.Bridge
 
         public static object SerializeToObjectLiteral(object obj, Type type)
         {
-            var encoded = Converters.EncodeObject(obj, type.Name);
+            var encoded = Converters.EncodeObject(obj, type);
             var encodedWithoutBoxing = Converters.EliminateBoxing(encoded);
             return encodedWithoutBoxing;
         }

@@ -119,6 +119,15 @@ namespace Cable.Bridge
             return EliminateBoxing(result);
         }
 
+        public static object EncodeEnum(object value, Type t)
+        {
+            var result = Script.Write<object>("{}");
+            result["Type"] = "Enum";
+            result["EnumType"] = t.FullName;
+            result["Value"] = value;
+            return EliminateBoxing(result);
+        }
+
         [Template("Bridge.getType({value})")]
         static extern Type GetTypeof(object value);
 
@@ -137,9 +146,18 @@ namespace Cable.Bridge
             return encodedObject;
         }
 
-        public static object EncodeObject(object value, string typeName = "")
+        public static object EncodeObject(object value, Type objType = null)
         {
+            var typeName = "";
+
+            if (objType != null) typeName = objType.Name;
+
             var type = value.GetType();
+
+            if (objType != null && objType.IsEnum)
+            {
+                return EncodeEnum(value, objType);
+            }
 
             if (IsPrimitive(value))
             {
@@ -256,7 +274,7 @@ namespace Cable.Bridge
 
                 foreach(var prop in ExtactExistingProps(value))
                 {
-                    var nextValue = EncodeObject(prop.Value, prop.Type.Name);
+                    var nextValue = EncodeObject(prop.Value, prop.Type);
                     props[prop.Name] = EliminateBoxing(nextValue);
                 }
 
@@ -315,7 +333,7 @@ namespace Cable.Bridge
             {
                 var enumType = Type.GetType(json["EnumType"].As<string>());
                 var enumValue = Enum.Parse(enumType, json["Value"].As<string>());
-                return enumValue;
+                return enumValue["v"]; // unbox
             }
             else if (type  == "Array")
             {

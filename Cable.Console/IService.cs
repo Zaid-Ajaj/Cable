@@ -12,6 +12,8 @@ namespace Client
 
         Task<WrappedDateTime> EchoWrappedDateTime(WrappedDateTime data);
 
+        Task<ExampleEnum> EchoEnumAsync(ExampleEnum value);
+
         Task<object[]> StringIntCharDateTime(string arg1, int arg2, char arg3, DateTime date);
 
         Task<object[]> NumericPrimitives(int Int, long Int64, double Double, decimal Decimal);
