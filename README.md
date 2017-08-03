@@ -5,7 +5,7 @@ Type-safe client-server communication for C# featuring [Bridge.NET](https://gith
 
 ### [Cable.ArticleSample](https://github.com/Zaid-Ajaj/Cable.ArticleSample) Project used in the article to demonstrate Cable
 
-### [Cable.StandaloneConverter](https://github.com/Zaid-Ajaj/Cable.StandaloneConverter/tree/master) Project that demonstrates using the Cable converter stand-alone without HTTP abstractions
+### [Cable.StandaloneConverter](https://github.com/Zaid-Ajaj/Cable.StandaloneConverter/tree/master) Project that demonstrates using the Cable JSON converter stand-alone without HTTP abstractions
 
 ## TL;DR
 ### On the Nancy Server
