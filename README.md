@@ -3,7 +3,7 @@ Type-safe client-server communication for C# featuring [Bridge.NET](https://gith
 
 ### [Introducing Cable: Deep Dive Into Building Type-Safe Web Apps in C# with Bridge.NET and Nancy](https://medium.com/@zaid.naom/introducing-cable-deep-dive-into-building-type-safe-web-apps-in-c-with-bridge-net-and-nancy-a65f48398a02)
 
-### [Cable.ArticleSample](https://github.com/Zaid-Ajaj/Cable.ArticleSample) Project used in the article to demonstrate Cable
+### [Cable.ArticleSample](https://github.com/Zaid-Ajaj/Cable.ArticleSample) Project used in the article to demonstrate Cable. The repo can be used a template for client/server apps. Everything is already set up.
 
 ### [Cable.StandaloneConverter](https://github.com/Zaid-Ajaj/Cable.StandaloneConverter) Project that demonstrates using the Cable JSON converter stand-alone without HTTP abstractions
 
