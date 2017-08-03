@@ -3,7 +3,7 @@ Type-safe client-server communication for C# featuring [Bridge.NET](https://gith
 
 ### [Introducing Cable: Deep Dive Into Building Type-Safe Web Apps in C# with Bridge.NET and Nancy](https://medium.com/@zaid.naom/introducing-cable-deep-dive-into-building-type-safe-web-apps-in-c-with-bridge-net-and-nancy-a65f48398a02)
 
-### [Sample Project](https://github.com/Zaid-Ajaj/Cable.ArticleSample) Using Cable
+### [Cable.ArticleSample](https://github.com/Zaid-Ajaj/Cable.ArticleSample) Project used in the article to demonstrate Cable
 
 ## TL;DR
 ### On the Nancy Server
