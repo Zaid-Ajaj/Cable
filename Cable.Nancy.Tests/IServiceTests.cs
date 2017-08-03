@@ -209,6 +209,46 @@ namespace Cable.Nancy.Tests
             }
         }
 
+
+        [Test]
+        public void ThrownExceptionsAsyncAreCatchedAndReturned()
+        {
+            var browser = new Browser(bootstrapper);
+
+            var res = browser.Post("/IService/IThrowException", ctx =>
+            {
+                ctx.AjaxRequest();
+                ctx.Body(Args());
+            });
+
+            var result = res.Body.AsString(); 
+
+            var json = JObject.Parse(result);
+
+            Assert.True(json["$exception"].Value<bool>());
+            Assert.AreEqual(json["$exceptionMessage"].Value<string>(), "Catch me");
+        }
+
+
+        [Test]
+        public void ThrownExceptionsSyncAreCatchedAndReturned()
+        {
+            var browser = new Browser(bootstrapper);
+
+            var res = browser.Post("/IService/IThrowExceptionToo", ctx =>
+            {
+                ctx.AjaxRequest();
+                ctx.Body(Args()); 
+            });
+
+            var result = res.Body.AsString();
+
+            var json = JObject.Parse(result);
+
+            Assert.True(json["$exception"].Value<bool>());
+            Assert.AreEqual(json["$exceptionMessage"].Value<string>(), "Catch me too!");
+        }
+
         [Test]
         public void NoArgumentsReturningString()
         {

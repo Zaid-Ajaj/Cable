@@ -54,6 +54,16 @@ namespace Cable.Nancy.Tests
             return Task.FromResult(result);
         }
 
+        public Task<bool> IThrowException()
+        {
+            throw new Exception("Catch me");
+        }
+
+        public bool IThrowExceptionToo()
+        {
+            throw new Exception("Catch me too!");
+        }
+
         public Task<DateTime[]> ArrayOfDateTime(DateTime[] dates)
         {
             return Task.FromResult(dates);

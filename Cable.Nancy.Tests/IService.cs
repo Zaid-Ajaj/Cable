@@ -65,7 +65,9 @@ namespace Cable.Nancy.Tests
 
         Task<Generic<Person>> EchoGenericPerson(Generic<Person> g);
 
+        Task<bool> IThrowException();
 
+        bool IThrowExceptionToo();
 
         //Task<bool> ArrayOfDecimals(decimal[] decimals);
 

@@ -200,7 +200,7 @@ namespace Cable.Nancy
                 {
                     var errorData = new Dictionary<string, object>();
                     errorData["$exception"] = true;
-                    errorData["$exceptionData"] = ex;
+                    errorData["$exceptionMessage"] = ex.InnerException.Message;
                     return JsonConvert.SerializeObject(errorData);
                 }
             };
