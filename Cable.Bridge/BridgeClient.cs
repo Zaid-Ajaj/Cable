@@ -44,7 +44,7 @@ namespace Cable.Bridge
 
                 if (json["$exception"].As<bool>())
                 {
-                    throw new Exception(json["$exceptionData"]["Message"].As<string>());
+                    throw new Exception(json["$exceptionMessage"].As<string>());
                 }
                 else
                 {
