@@ -42,7 +42,7 @@ namespace Cable.Bridge
             {
                 var json = JSON.Parse(xmlHttp.ResponseText);
 
-                if (json["$exception"].As<bool>())
+                if (Script.IsDefined(json["$exception"]) && json["$exception"].As<bool>())
                 {
                     throw new Exception(json["$exceptionMessage"].As<string>());
                 }
@@ -79,7 +79,7 @@ namespace Cable.Bridge
                         }
                         else if (Script.IsDefined(json["$exception"]) && json["$exception"].As<bool>())
                         {
-                            tcs.SetException(new Exception(json["$exceptionData"]["Message"].As<string>()));
+                            tcs.SetException(new Exception(json["$exceptionMessage"].As<string>()));
                         }
                         else
                         {
@@ -121,7 +121,7 @@ namespace Cable.Bridge
                         }
                         else if (Script.IsDefined(json["$exception"]) && json["$exception"].As<bool>())
                         {
-                            tcs.SetException(new Exception(json["$exceptionData"]["Message"].As<string>()));
+                            tcs.SetException(new Exception(json["$exceptionMessage"].As<string>()));
                         }
                         else
                         {
