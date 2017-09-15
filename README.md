@@ -1,4 +1,7 @@
-# Cable
+# Cable 
+[![Build status](https://ci.appveyor.com/api/projects/status/7fu7mo7pquumaho9?svg=true)](https://ci.appveyor.com/project/Zaid-Ajaj/cable)
+
+
 Type-safe client-server communication for C# featuring [Bridge.NET](https://github.com/bridgedotnet/Bridge) and [NancyFx](https://github.com/NancyFx/Nancy). It is a Remote Procedure Call (RPC) implementation for Bridge.NET as the client and Nancy as the Server.
 
 [Introducing Cable: Deep Dive Into Building Type-Safe Web Apps in C# with Bridge.NET and Nancy](https://medium.com/@zaid.naom/introducing-cable-deep-dive-into-building-type-safe-web-apps-in-c-with-bridge-net-and-nancy-a65f48398a02)
